@@ -34,7 +34,7 @@ pytest --email
 
 To see the current email, which will include more information about the work your Boss wants done.
 
-Once you've gotten the initial test(s) passing, you can progress to the next level, by using the special `--level` option: You default to level 0.
+Once you've gotten the initial test(s) passing, you can progress to the next level, by using the special `--level` option: You will default to level 0, which only tests basic API behavior.
 
 This will activate new tests, and also a new email from the Boss, which you can check by adding the `--email` option as well:
 
@@ -67,4 +67,4 @@ pytest --level 2
 
 Can you survive your first day at *InstaPoker?*
 
-![World's Best Boss](https://imgur.com/bKZQCOk)
+![World's Best Boss](/worlds-best-boss.jpg)
