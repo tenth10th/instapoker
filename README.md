@@ -63,7 +63,13 @@ Then, when you think you're ready, run the tests:
 pytest --level 2
 ```
 
-(If you'd prefer, you can also edit `pytest.ini` to change the default/current level, so you don't have to keep adding the `--level` option. But you can still use `--level 0` to run your Unit Tests and the basic API integration test only.
+(If you'd prefer, you can also edit `pytest.ini` to change the default/current level, so you don't have to keep adding the `--level` option. But you can still use `--level 0` to run your Unit Tests and the basic API integration test only.)
+
+You can also check the rules and their priorities (as currently defined by your Boss) by running pytest with the `--rules` option:
+
+```
+pytest --rules
+```
 
 Can you survive your first day at *InstaPoker?*
 
