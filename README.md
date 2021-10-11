@@ -34,7 +34,7 @@ pytest --email
 
 To see the current email, which will include more information about the work your Boss wants done.
 
-Once you've gotten the initial test(s) passing, you can progress to the next level, by using the special `--level` option: You will default to level 0, which only tests basic API behavior.
+Once you've gotten the initial test (and your own unit tests, if any) passing, you can progress to the next level, by using the special `--level` option: You will default to level 0, which only tests basic API behavior and runs any unit tests you've added.
 
 This will activate new tests, and also a new email from the Boss, which you can check by adding the `--email` option as well:
 
@@ -42,8 +42,7 @@ This will activate new tests, and also a new email from the Boss, which you can 
 pytest --level 1 --email
 ```
 
-Once you've done the work, and written your own tests (running `pytest` alone will target
-your unit tests), you can run the level 1 integration tests:
+Once you've done the work, and gotten your own unit tests passing, you can run the level 1 integration tests:
 
 ```
 pytest --level 1
@@ -63,7 +62,9 @@ Then, when you think you're ready, run the tests:
 pytest --level 2
 ```
 
-(If you'd prefer, you can also edit `pytest.ini` to change the default/current level, so you don't have to keep adding the `--level` option. But you can still use `--level 0` to run your Unit Tests and the basic API integration test only.)
+And so on, progressing through levels and email requests from your virtual Boss.
+
+(If you'd prefer, you can also edit `pytest.ini` to change the default/current level, so you don't have to keep adding the `--level` option. But you can still use `--level 0` to run your Unit Tests and the basic API integration tests only.)
 
 You can also check the rules and their priorities (as currently defined by your Boss) by running pytest with the `--rules` option:
 
