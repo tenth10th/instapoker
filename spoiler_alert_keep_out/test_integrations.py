@@ -121,11 +121,14 @@ def test_invalid_suit_inputs(h1, h2):
     Hands containing invalid suits raise ValueErrors
     """
     # Less idiomatic than pytest.raises, but clearer assertion errors!
+    assertion_error = f"Failed to raise ValueError, given invalid Suit {h2[-1]}"
     try:
         score_poker_hands(h1, h2)
     except Exception as e:
         if not isinstance(e, ValueError):
-            raise AssertionError(f"Failed to raise ValueError, given invalid Suit {h2[-1]}")
+            raise AssertionError(assertion_error)
+    else:
+        raise AssertionError(assertion_error)
 
 
 @pytest.mark.level(2)
@@ -137,12 +140,15 @@ def test_invalid_rank_inputs(h1, h2):
     """
     Hands containing invalid ranks raise ValueErrors
     """
+    assertion_error = f"Failed to raise ValueError, given invalid Rank {h2[0:-1]}"
     # Less idiomatic than pytest.raises, but clearer assertion errors!
     try:
         score_poker_hands(h1, h2)
     except Exception as e:
         if not isinstance(e, ValueError):
-            raise AssertionError(f"Failed to raise ValueError, given invalid Rank {h2[0:-1]}")
+            raise AssertionError(assertion_error)
+    else:
+        raise AssertionError(assertion_error)
 
 @pytest.mark.level(3)
 @pytest.mark.parametrize("h1, h2, expected_result", [
@@ -173,13 +179,15 @@ def test_invalid_obsolete_rank_inputs(h1, h2):
     """
     Rank "10" is no longer valid (in favor of rank "T")
     """
+    assertion_error = f"Failed to raise ValueError, given invalid Rank \"10\""
     # Less idiomatic than pytest.raises, but clearer assertion errors!
     try:
         score_poker_hands(h1, h2)
     except Exception as e:
         if not isinstance(e, ValueError):
-            raise AssertionError(f"Failed to raise ValueError, given invalid Rank \"10\"")
-
+            raise AssertionError(assertion_error)
+    else:
+        raise AssertionError(assertion_error)
 
 @pytest.mark.level(5)
 @pytest.mark.parametrize("h1, h2, expected_result", [
@@ -334,9 +342,12 @@ def test_duplicate_cards(h1, h2):
     """
     Duplicate cards within/across hands raise ValueErrors
     """
+    assertion_error = f"Failed to raise ValueError, given duplicate card AC!"
     # Less idiomatic than pytest.raises, but clearer assertion errors!
     try:
         score_poker_hands(h1, h2)
     except Exception as e:
         if not isinstance(e, ValueError):
-            raise AssertionError(f"Failed to raise ValueError, given duplicate card AC!")
+            raise AssertionError(assertion_error)
+    else:
+        raise AssertionError(assertion_error)
