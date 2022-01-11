@@ -26,7 +26,9 @@ def display_boss_email(level):
         print("(No Boss Email available for Level {})".format(level))
 
 
-def display_test_level_info(level):
+def display_test_level_info(level, submit):
+    if not submit:
+        print("(Running your local tests only)")
     if level == 0:
         print("(Test Level 0: Not running incremental tests)")
     elif level == 1:

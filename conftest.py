@@ -20,17 +20,11 @@ level_state = {}
 
 
 def pytest_addoption(parser):
-    """
-    --level (highest "level" of test to run, defaulting to 0)
-    --email (display level notes in "boss email" form)
-    --rules (list Poker Rules as of the current level)
-    """
     parser.addoption(
         "--level",
         action="store",
-        metavar="NAME",
-        default=0,
-        help="run integration tests of integer [level] or lower",
+        metavar="LEVEL_INT",
+        help="Override level, to view older emails",
     )
     parser.addoption(
         "--email",
@@ -63,8 +57,12 @@ def pytest_configure(config):
 
     level = 0
     level_state = load_level_state()
-
     level_str = config.getoption("--level")
+
+    if debug:
+        print(">>> pytest_configure level_state:", level_state)
+        print(">>> pytest_configure --level:", level_str)
+
     if level_str is not None:
         try:
             level = int(level_str)
@@ -78,20 +76,18 @@ def pytest_configure(config):
             print(f"Ignoring invalid current_level state: {level_state['current_level']}")
             pass
 
+    if debug:
+        print(">>> pytest_configure level:", level)
+
     show_email = config.getoption("--email")
     if show_email:
         display_boss_email(level)
-        pytest.exit("(after reading email #{})".format(level+1))
+        pytest.exit(f"(after reading email #{level+1})")
 
-    show_email = config.getoption("--rules")
-    if show_email:
+    show_rules = config.getoption("--rules")
+    if show_rules:
         display_poker_rules(level)
-        level_info = ""
-        if level:
-            level_info = " for level {}".format(level)
-        pytest.exit("(after displaying Poker rules{})".format(level_info))
-
-    display_test_level_info(level)
+        pytest.exit(f"(after displaying v{(level or 0)+1} Poker rules)")
 
 
 def get_level_marks(item):
@@ -109,27 +105,23 @@ def pytest_runtest_setup(item):
     """
     submit = item.config.getoption("--submit")
 
+    level = 0
     # Get the --level option, convert to Integer (or None)
     if submit:
-        level_str = load_level_state().get("current_level", "0")
-    else:
-        level_str = "0"
-
-    level_option = None
-    if level_str is not None:
+        level = load_level_state().get("current_level", 0)
         try:
-            level_option = int(level_str)
+            level = int(level)
         except ValueError:
-            pytest.exit(f"Invalid current_level config option: {level_str}")
+            pytest.exit(f"Invalid current_level config option: {level}")
 
-    if level_option is not None:
-        level, max_level = get_level_marks(item)
-        if not submit and level is not None or max_level is not None:
-            pytest.skip("(Not Running Integration Tests)")
-        if level and level > level_option:
-            pytest.skip("Until L{}".format(level))
-        if max_level and level_option > max_level:
-            pytest.skip("After L{}".format(max_level))
+    min_level, max_level = get_level_marks(item)
+
+    if not submit and min_level is not None or max_level is not None:
+        pytest.skip("(Not Running any Integration Tests)")
+    if min_level and min_level > level:
+        pytest.skip("Not Until L{}".format(min_level))
+    if max_level and level > max_level:
+        pytest.skip("Not After L{}".format(max_level))
 
 
 def pytest_sessionfinish(session, exitstatus):
@@ -143,7 +135,7 @@ def pytest_sessionfinish(session, exitstatus):
     if submit and status_int == 0:
         level_state['current_level'] += 1
         write_level_state(level_state)
-        print(f"All Tests Passed: Advancing to level {level_state['current_level']}!")
+        print(f"* * * All Tests Passed: Advancing to level {level_state['current_level']}! * * *")
     elif submit:
         print(f"(Some Tests Failed - Remaining on level {level_state['current_level']})")
 
@@ -165,7 +157,8 @@ def load_level_state():
 def write_level_state(level_state):
     with open(LEVEL_STATE_PATH, 'w') as f:
         try:
-            print(f"writing level_state: {level_state}")
+            if debug:
+                print(f"writing level_state: {level_state}")
             f.write(json.dumps(level_state))
             f.flush()
         except Exception as e:
