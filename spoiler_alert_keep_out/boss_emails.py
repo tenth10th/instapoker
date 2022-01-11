@@ -10,10 +10,9 @@ and return a scoring result as an Integer - How about:
 
  * 2 if the second Hand wins
 
-I can't _possibly_ imagine us ever needing to change this API,
-so let's lock that in first!
+I can't imagine us ever needing to change this API, so let's get it locked in first!
 
-Don't worry about the rules yet.
+Don't worry about the rules yet, just submit when you have the API in the right shape.
 """,
 
 # 1
@@ -22,14 +21,15 @@ I've added the current list of Rank and Suit symbols to the --rules.
 There are a lot of them! Like, a whole bunch.
 
 The UI team has decided to represent Poker Hands as pairs of Ranks and Suits,
-so a Two of Hearts would be "2H", and a King of Diamonds would be "KD".
+in that order: So "2H" for a Two of Hearts, "KD" for King of Diamonds, etc.
 
 The base rule of poker scoring sounds pretty simple:
 
   * The hand with the highest-ranked card wins! (I guess Suits don't matter?)
 
-Anyway, for now, let's assume Hands of a single card only.
-This will be super easy!
+For now, let's assume Hands of a single card only. Super easy!
+
+Let's do it! (And don't forget to submit it when you're finished.)
 """,
 
 # 2
@@ -41,17 +41,19 @@ For now, let's just say that if the Hand inputs aren't valid
 
 Oh, and we probably shouldn't accept any Ranks or Suits that
 aren't in the official list...
+
+Make it so! (get it? Like that star wars thing?)
 """,
 
 # 3
 """
 Okay! Everything is going great, so now we just have to deal
 with multiple-card hands. (I don't think you're supposed to have
-more than five cards at once? But not sure about that.)
+more than five cards at once? Not 100% sure about that.)
 
-The pairs of Rank and Suit will be separated by spacing, but
+The pairs of Rank and Suit will be separated by spaces, but
 that rule about the Highest Card winning should still work,
-as long as you apply it across the cards in the hand.
+as long as you apply it across all the cards in the hand.
 
 So easy! We must be almost done... I am _crushing_ this!
 """,
@@ -71,7 +73,7 @@ quick, and then we can get back to _crushing_it_!
 # 5
 """
 So: full disclosure, I thought we were done scoring Hands, but
-it turns out there are a couple of different kinds.
+it turns out there are a couple of different kinds of them. Who knew?
 
 The first one is called a "Pair", which is a Hand that
 has two cards of the same Rank - I've added this to the --rules.
@@ -90,7 +92,7 @@ when I started this Online Poker company: I guess two Hands can
 be "tied"? Like, if the highest cards from both hands have the same rank?
 
 When that happens, I guess just compare the next-highest card in
-each Hand, until you can break the tie.
+each Hand, until you can break the tie. Problem solved!
 
 (Unless all the cards in both hands are tied? Then it's a Draw...
 Crap. I guess, return a 0 as the result in that case?)
@@ -104,14 +106,14 @@ that'll be simple, though - how could fractional money go wrong?
 """
 Okay, believe it or not, you can have Two Pairs in a Hand, also -
 That's two pairs of two of the same card. But it says in this
-Google I found that the two pairs have to be of different ranks.
+Google I found that the two pairs have to be of different ranks!
 
 (I hope this doesn't mean that four of the same rank is some
-other Poker thing, though!)
+other Poker thing, though! Ugh. Who comes up with this stuff?)
 
-Two Pairs beats any single Pair, beats any high card. (I guess
-you still have to figure that out when there's a tie. Crush it!
-I believe in you!)
+Two Pairs beats any single Pair, which beats any single card.
+(I guess you still have to figure that out when there's a tie.)
+Crush it! I believe in you!
 
 Anyway, I added this to the --rules.
 """,
@@ -146,16 +148,19 @@ Added to --rules. Crush it?
 
 # 10
 """
-All right, so, there are also "Flush" hands. I guess this
-is like what they're talking about when they say "Royal Flush"
-on the Poker channel?
+All right, so, "Flush" hands. Like, I want to flush this dumb
+Poker audiobook down the toilet. Anyway, I guess this is like,
+what they're talking about when they say "Royal Flush" on the
+Poker channel?
 
 A Flush is when all five cards have the same... Suit? And that
 (as usual) beats all the other previous Hands so far.
 
 Ahh, crap. Have you been deleting the Suits? I think you need
-the suits. It's too bad if you decided they weren't important
-for some reason. --rules'ed! Crush stuff, I guess.
+the suits. If you decided they weren't important for some
+reason, well... Gotta be detail-oriented, you know?
+
+Added to the --rules. Crush stuff?
 """,
 
 # 11
@@ -163,6 +168,8 @@ for some reason. --rules'ed! Crush stuff, I guess.
 I can't get the stupid FULL HOUSE song out of my head now!
 But it blows my mind, that the show was about Poker this
 whole time! No wonder people like it so much!
+
+The show, I mean, not Poker. Poker is making me mad today.
 
 A Full House is when a Hand has a Three Of A Kind, and a
 Pair in it, and it beats all the previous hands.
@@ -190,9 +197,12 @@ something in all this crazy Poker talk...
 I think we got the Straight wrong originally - The Suits
 in a Straight CAN'T all be the same Suit... Because there
 is a different Hand for that. (Who came up with all these
-dumb Hands?) So, first, let's make sure Straight is right.
+dumb Hands?) So, first, let's make sure Straight hands are
+done right.
 
-Fixed the --rules.
+(Straight Hands? is that an Interpol track? I'll check.)
+
+Fixed the --rules. Go forth and crush!
 """,
 
 # 14
@@ -212,19 +222,21 @@ because you can only have five cards, but you get the idea.
 
 # 15
 """
-It's the Home Stretch, my dudes! Bases are loaded,
+It's the Home Stretch, my dude! Bases are loaded,
 and it's nothing but net! Let's touch down the conversion!
 
-(I kind of want to have a Sports Betting site - Are those
-hard to do?)
+(I kind of want to make a Sports Betting site now - Are those
+hard to do? Let's talk tomorrow.)
 
 Anyway, now we just need to implement the Royal Flush,
-which is the best kind of Straight Flush, which is always
-Ace, King, Queen, Jack, 10. I guess in hindsight it's kind
-of obvious that the best Straight Flush would beat the less
-good Straight Flushes, but I guess they gave it a cool name.
+which is the best kind of Straight Flush, which is the
+Ace, King, Queen, Jack, and 10 of the same card.
 
-Nice job crushing it! Let's talk Sports Betting tomorrow.
+I guess in hindsight it's kind of obvious that the best
+Straight Flush would beat the less good Straight Flushes,
+but I guess that's why they gave it a cool name.
+
+Nice job crushing it! (after you get Royal Flushes working)
 """,
 
 #16
@@ -238,16 +250,19 @@ one step ahead.
 
 Anyway, Finance is upset, and I told them you fixed it, and
 I don't think this is going to be a big deal - But, could you,
-like, fix this?
+like, also actually fix this? Before you go home tonight.
 
 I guess the problem is that people are like, not POSTing the
-Hands they actually have, and making up cards and stuff - So I
-think as long as you make sure they aren't making up cards
+Hands they actually have, and making stuff up - So I
+think as long as you make sure they aren't copying cards
 (like, putting the same card in their Hand twice, or that
 the same card isn't in both Hands) and raise a ValueError,
-that should pretty much do it.
+that should pretty much take care of it?
 
 I'm about to meet with the Venture Capital peeps about how
 the first day of Poker payouts have gone. Wish me luck!
+
+Tomorrow: Sports Betting! Or fantasy football? Wait, can you
+place bets on Fantasy Football?!? <img src="galaxy_brain.gif">
 """
 ]
