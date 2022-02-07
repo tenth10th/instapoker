@@ -21,14 +21,18 @@ LEVEL_STATE_PATH = 'spoiler_alert_keep_out/level_state.json'
 level_state = {}
 
 @dataclass
-class Integration():
+class IntegrationStatus:
     """
-    Describes integration test status, and level ranges (if applicable)
+    Stores integration test status, and level ranges (if applicable)
     """
     is_integration: bool = False
     min_level: int = None
     max_level: int = None
+
     def __bool__(self):
+        """
+        Truthyness determined by current is_integration bool
+        """
         return self.is_integration
 
 
@@ -58,10 +62,10 @@ def pytest_addoption(parser):
 
 def pytest_configure(config):
     """
-    Register an additional "integration" marker that takes a single integer argument
+    Register "integration" marker that takes optional level range arguments
     """
     config.addinivalue_line(
-        "markers", "integration(min_level, max_level): Run in --submit mode, if in appropriate level range"
+        "markers", "integration(min_level, max_level): Only run with --submit, if not outside level range"
     )
 
     level = 0
@@ -99,17 +103,17 @@ def pytest_configure(config):
         pytest.exit(f"(after displaying v{(level or 0)+1} Poker rules)")
 
 
-def get_integration_levels(item):
+def get_integration_status(item):
     """
-    Return (min_level, max_level), first checking args, then kwargs.
-    Both min_level and max_level default to None if undefined.
+    Return IntegrationStatus object, first checking args, then kwargs.
+    (Both min_level and max_level default to None if undefined)
     """
     integration_marks = [
         mark for mark in item.iter_markers()
         if mark.name == INTEGRATION
     ]
     if not integration_marks:
-        return Integration(is_integration=False)
+        return IntegrationStatus(is_integration=False)
 
     mark = integration_marks[0]
     levels = dict()
@@ -120,54 +124,58 @@ def get_integration_levels(item):
         levels[MIN_LEVEL] = mark.kwargs.get(MIN_LEVEL)
         levels[MAX_LEVEL] = mark.kwargs.get(MAX_LEVEL)
 
-    return Integration(is_integration=True, **levels)
+    return IntegrationStatus(is_integration=True, **levels)
 
 
 def pytest_runtest_setup(item):
     """
-    Skip any tests whose "level" mark is above our current --level setting
-    (or whose max_level is less than our current --level setting)
+    In Submit mode, skip tests whose level min/max excludes the current level
     """
-    submit = item.config.getoption("--submit")
+    submitted = item.config.getoption("--submit")
 
     level = 0
     # Get the --level option, convert to Integer (or None)
-    if submit:
+    if submitted:
         level = load_level_state().get("current_level", 0)
         try:
             level = int(level)
         except ValueError:
             pytest.exit(f"Invalid current_level config option: {level}")
 
-    integration = get_integration_levels(item)
+    integration = get_integration_status(item)
 
-    if integration and not submit:
+    if integration and not submitted:
         pytest.skip("(Not Running any Integration Tests)")
-    if submit and integration:
-        item.config.tb = 'line'
-        if integration.min_level and integration.min_level > level:
-            pytest.skip("Not Until L{}".format(integration.min_level))
-        if integration.max_level and level > integration.max_level:
-            pytest.skip("Not After L{}".format(integration.max_level))
+    if integration and submitted:
+        if integration.min_level is not None and level < integration.min_level:
+            pytest.skip("Not Until Level {}".format(integration.min_level))
+        if integration.max_level is not None and level > integration.max_level:
+            pytest.skip("Not After Level {}".format(integration.max_level))
 
 
 def pytest_sessionfinish(session, exitstatus):
+    """
+    Handle level advancement, if all Tests pass in --submit mode
+    """
     status_int = int(exitstatus)
-    submit = session.config.getoption("--submit")
+    submitted = session.config.getoption("--submit")
     level_state = load_level_state()
     if debug:
         print("\n")
         print(f"status_int: {status_int}")
-        print(f"submit active: {submit}")
-    if submit and status_int == 0:
+        print(f"submit active: {submitted}")
+    if submitted and status_int == 0:
         level_state['current_level'] += 1
         write_level_state(level_state)
         print(f"\n\n* * * All Tests Passed: Advancing to level {level_state['current_level']}! * * *")
-    elif submit:
+    elif submitted:
         print(f"\n\n(Some Tests Failed - Remaining on level {level_state['current_level']})")
 
 
 def load_level_state():
+    """
+    Load current (level) config in from file, defaulting to starting state
+    """
     if not exists(LEVEL_STATE_PATH):
         return {"current_level": 0}
     with open(LEVEL_STATE_PATH, 'r') as f:
@@ -182,6 +190,9 @@ def load_level_state():
 
 
 def write_level_state(level_state):
+    """
+    Write current (level) config out to file
+    """
     with open(LEVEL_STATE_PATH, 'w') as f:
         try:
             if debug:
@@ -198,25 +209,26 @@ def pytest_runtest_makereport(item, call):
     """
     Post-Test reporting behaviors
 
-    * Stop with failure after the first Integration test fails
+    * Stop PyTest after any one Integration test fails
 
     * Render Integration test failures in "single line" traceback mode
     """
     test_run = yield
-    integration = get_integration_levels(item)
+    integration = get_integration_status(item)
     if not integration:
         return
 
     result = test_run.get_result()
     if result.outcome == 'failed':
         item.session.shouldfail = "(Integration Test Failed)"
-        # Re-render the result repr with single-line tracebacks
+        # Re-render the result repr as a single-line traceback string
         one_liner = item._repr_failure_py(
             call.excinfo,
             style="line"
         )
         one_liner_str = str(one_liner)
-        print("one_liner:", one_liner)
+        # On AssertionError, or pytest.fail(), use the single-line traceback
         if "AssertionError" in one_liner_str or "E   Failed" in one_liner_str:
             result.longrepr = one_liner
+
     return result

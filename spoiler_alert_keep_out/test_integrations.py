@@ -69,8 +69,13 @@ def test_poker_scoring_api():
     """
     score_poker_hands accepts two strings
     """
-    result = score_poker_hands("2D", "2H")
-
+    error = ""
+    try:
+        score_poker_hands("2D", "2H")
+    except TypeError as e:
+        error = str(e)
+    if error:
+        pytest.fail(error)
 
 @pytest.mark.integration(min_level=0)
 def test_poker_scoring_api_return_type():
