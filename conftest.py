@@ -215,20 +215,30 @@ def pytest_runtest_makereport(item, call):
     """
     test_run = yield
     integration = get_integration_status(item)
+
+    # Do not alter the post-test behavior of non-integration (userspace) tests
     if not integration:
         return
 
     result = test_run.get_result()
     if result.outcome == 'failed':
+        # Stop PyTest after the first failed Integration test
         item.session.shouldfail = "(Integration Test Failed)"
+
+        # Honor --full-trace and --tb by not altering the traceback!
+        full_trace = item.config.getoption('--full-trace')
+        tb = item.config.getoption('--tb')
+        if full_trace or tb != 'auto':
+            return
+
         # Re-render the result repr as a single-line traceback string
         one_liner = item._repr_failure_py(
             call.excinfo,
-            style="line"
+            style="no"
         )
         one_liner_str = str(one_liner)
-        # On AssertionError, or pytest.fail(), use the single-line traceback
-        if "AssertionError" in one_liner_str or "E   Failed" in one_liner_str:
+        # On AssertionError, or pytest.fail(), use the single-line traceback!
+        if "AssertionError" in one_liner_str or "Failed:" in one_liner_str:
             result.longrepr = one_liner
 
     return result

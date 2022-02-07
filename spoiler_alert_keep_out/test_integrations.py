@@ -48,22 +48,6 @@ def test_score_poker_hands_is_a_function():
     )
 
 
-def hand_error_str(h1, h2, int_result):
-    if int_result == 1:
-        result_verb = "win"
-    elif int_result == 2:
-        result_verb = "lose"
-    else:
-        result_verb = "draw"
-
-    return f"{h1} should {result_verb} against {h2}!"
-
-def validate_hand_result(h1, h2, expected_result):
-    __tracebackhide__ = True
-    result = score_poker_hands(h1, h2)
-    if result != expected_result:
-        pytest.fail(hand_error_str(h1, h2, expected_result))
-
 @pytest.mark.integration(min_level=0)
 def test_poker_scoring_api():
     """
@@ -77,6 +61,7 @@ def test_poker_scoring_api():
     if error:
         pytest.fail(error)
 
+
 @pytest.mark.integration(min_level=0)
 def test_poker_scoring_api_return_type():
     """
@@ -84,6 +69,24 @@ def test_poker_scoring_api_return_type():
     """
     result = score_poker_hands("2D", "2H")
     assert isinstance(result, int), "score_poker_hands output must be an integer!"
+
+
+def hand_error_str(h1, h2, int_result):
+    if int_result == 1:
+        result_verb = "win"
+    elif int_result == 2:
+        result_verb = "lose"
+    else:
+        result_verb = "draw"
+
+    return f"{h1} should {result_verb} against {h2}!"
+
+
+def validate_hand_result(h1, h2, expected_result):
+    __tracebackhide__ = True
+    result = score_poker_hands(h1, h2)
+    if result != expected_result:
+        pytest.fail(hand_error_str(h1, h2, expected_result))
 
 
 @pytest.mark.integration(min_level=1)
