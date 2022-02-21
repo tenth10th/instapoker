@@ -16,14 +16,15 @@ def procedural_datetime(level):
 def display_boss_email(level):
     subject = "Poker" if level == 0 else "re: Poker"
     datetime_str = procedural_datetime(level)
-    if level < len(boss_emails):
-        print()
-        print("from:    the-bawss@instapoker.com")
-        print("date:    {}".format(datetime_str))
-        print("subject: {}".format(subject))
-        print(boss_emails[level])
-    else:
-        print("(No Boss Email available for Level {})".format(level))
+    if level >= len(boss_emails):
+        level = len(boss_emails) - 1
+    print()
+    print("from:    the-bawss@instapoker.com")
+    print("date:    {}".format(datetime_str))
+    print("subject: {}".format(subject))
+    print(boss_emails[level])
+    # else:
+    #     print("(No Boss Email available for Level {})".format(level))
 
 
 def display_test_level_info(level, submit):

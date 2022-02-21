@@ -167,7 +167,7 @@ def pytest_sessionfinish(session, exitstatus):
     if submitted and status_int == 0:
         level_state['current_level'] += 1
         write_level_state(level_state)
-        print(f"\n\n* * * All Tests Passed: Advancing to level {level_state['current_level']}! * * *")
+        print(f"\n\n* * * All Tests Passed: Advancing to level {level_state['current_level']}!  (New --email recieved!) * * *")
     elif submitted:
         print(f"\n\n(Some Tests Failed - Remaining on level {level_state['current_level']})")
 

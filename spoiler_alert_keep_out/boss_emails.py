@@ -2,267 +2,240 @@ boss_emails = [
 
 # 0
 """
-For now, let's just get the basic API working:
-We'll want to be able to accept two poker hands, as strings,
-and return a scoring result as an Integer - How about:
+Okay, to start, let's just get the basic API working. We'll want to accept two
+poker hands, as strings, and return a scoring result as an Integer.
 
- * 1 if the first Hand wins
+I can't imagine us ever needing to change this API, so let's lock that in first!
+Don't worry about the rules yet, just --submit when the API is in the right shape.
 
- * 2 if the second Hand wins
-
-I can't imagine us ever needing to change this API, so let's get it locked in first!
-
-Don't worry about the rules yet, just submit when you have the API in the right shape.
+Let's do this!
 """,
 
 # 1
 """
-I've added the current list of Rank and Suit symbols to the --rules.
-There are a lot of them! Like, a whole bunch.
-
 The UI team has decided to represent Poker Hands as pairs of Ranks and Suits,
-in that order: So "2H" for a Two of Hearts, "KD" for King of Diamonds, etc.
-
-The base rule of poker scoring sounds pretty simple:
+in that order: So "2H" for a Two of Hearts, "5D" for a Five of Diamonds, etc.
+For now, let's assume each hand is a single card - I've added some ranks and
+suits to the --rules. The basic rule sounds pretty simple:
 
   * The hand with the highest-ranked card wins! (I guess Suits don't matter?)
 
-For now, let's assume Hands of a single card only. Super easy!
+  * Return 1 if the first hand won, or 2 if the second hand won
 
-Let's do it! (And don't forget to submit it when you're finished.)
+Let's do it! (And don't forget to --submit when you're finished.)
 """,
 
 # 2
 """
-Sooo, we're already seeing some problems with bad Hand inputs...
+So, playing cards have a ton of Ranks and Suits. There are a lot of them!
+Like, a whole bunch. After 2 - 9, there's also a 10, and then a bunch of
+letters for Jack, Queen, King, and Ace (J, Q, K, A).
 
-For now, let's just say that if the Hand inputs aren't valid
-(e.g. are not strings), we'll raise a ValueError, or something?
+But that's it!  I've updated the --rules with the order.
 
-Oh, and we probably shouldn't accept any Ranks or Suits that
-aren't in the official list...
+(Suits don't have an order, or a value. Weird! Maybe we should replace
+them with banner ads and get some money out of that real estate?)
 
-Make it so! (get it? Like that star wars thing?)
+Let's get those added as well. I think we're almost done! Home Stretch!
 """,
 
 # 3
 """
-Okay! Everything is going great, so now we just have to deal
-with multiple-card hands. (I don't think you're supposed to have
-more than five cards at once? Not 100% sure about that.)
+Sooo, Q&A is already seeing some problems with bad Hand inputs...
 
-The pairs of Rank and Suit will be separated by spaces, but
-that rule about the Highest Card winning should still work,
-as long as you apply it across all the cards in the hand.
+For now, let's just say that if the Hand inputs aren't valid (e.g. are not
+strings), we'll raise a ValueError, or something? And we probably shouldn't
+accept any Ranks or Suits that aren't in the official list! (see --rules)
 
-So easy! We must be almost done... I am _crushing_ this!
+Make it so! (get it? Like that star wars thing?)
 """,
 
 # 4
 """
-Sooo... slight change of plans, but no big deal:
+So, I just watched a poker match on YouTube, and those guys all had, like,
+a BUNCH of cards in their Hands. (I don't think you're supposed to have more
+than five cards at once? Not 100% sure on that, will confirm.)
 
-The UI folks decided that all Ranks should be represented by a
-single character. And I was like, no problem, they are! But I
-guess somebody forgot about "10".
+Hands will now have cards separated by spaces, like "2H 4D 7C 2H 3S", but
+that rule about the Highest Card winning works the same, just with more
+cards. Also, I guess the cards won't be in any particular order?
 
-They're saying we should use "T" instead - Just fix that real
-quick, and then we can get back to _crushing_it_!
+So easy! We must be almost done... I am _crushing_ this!
 """,
 
 # 5
 """
-So: full disclosure, I thought we were done scoring Hands, but
-it turns out there are a couple of different kinds of them. Who knew?
+Sooo... slight change of plans, but no big deal:
 
-The first one is called a "Pair", which is a Hand that
-has two cards of the same Rank - I've added this to the --rules.
-A Hand with a Pair always beats a Hand without one, which is confusing.
+The UI folks decided that all Ranks should be a single character. And I was
+like, no problem, they are! But I guess somebody forgot about "10".
 
-(I guess Suit still doesn't matter? Why do cards even have them?)
-
-This Poker book also keeps talking about "kickers", but that sounds
-lame, and I'm ignoring it for now.
+They're saying we should use "T" instead. Just check the --rules and fix that
+real quick, and then we can get back to crushing it! 
 """,
 
 # 6
 """
-Super duper minor thing that somebody forgot to tell me about
-when I started this Online Poker company: I guess two Hands can
-be "tied"? Like, if the highest cards from both hands have the same rank?
+Full disclosure: It turns out there are different kinds of Hands? (Who knew?)
 
-When that happens, I guess just compare the next-highest card in
-each Hand, until you can break the tie. Problem solved!
+The first one is a "Pair", a Hand that has two cards of the same Rank - A Pair
+always beats a Hand without a Pair, even if the cards are better, which is
+confusing, but I guess that's Poker for you. (I guess the Suits still don't
+matter? Why do cards even have them?) Anyway, I've added this to the --rules.
 
-(Unless all the cards in both hands are tied? Then it's a Draw...
-Crap. I guess, return a 0 as the result in that case?)
-
-I just need to clear the concept of Draws with Finance - I guess
-you're supposed to, like, split the award evenly in half? I'm sure
-that'll be simple, though - how could fractional money go wrong?
+This Poker e-book keeps talking about "kickers" - sounds weird, so I'm
+ignoring it for now.
 """,
 
 # 7
 """
-Okay, believe it or not, you can have Two Pairs in a Hand, also -
-That's two pairs of two of the same card. But it says in this
-Google I found that the two pairs have to be of different ranks!
+Super duper minor thing: I guess two Hands can be "tied"? Like, if the highest
+cards from both hands have the same rank? Or two hands have the same Pair?
 
-(I hope this doesn't mean that four of the same rank is some
-other Poker thing, though! Ugh. Who comes up with this stuff?)
+When that happens, I guess just compare the next-highest cards in the Hands,
+until you can break the tie. Problem solved! --rules updated!
 
-Two Pairs beats any single Pair, which beats any single card.
-(I guess you still have to figure that out when there's a tie.)
-Crush it! I believe in you!
-
-Anyway, I added this to the --rules.
+(Unless all the cards in both hands are tied? Then it's a Draw... I guess,
+return a 0 as the result in that case? BRB, need to clear Draws with Finance!
+Half the award goes to each player - fractional money shouldn't be a big deal?)
 """,
 
 # 8
 """
-Ugh. So, there's more Hands. Like, a LOT of them. Poker sucks.
+Okay, believe it or not, a Hand could have two Pairs in it - But it says in
+this Google I found that the two Pairs have to be of different ranks!?
 
-The next one is a Three of a Kind - It's like a Pair, except
-that there are three cards, instead of two. (and I guess you
-resolve ties the same way). It also beats Two Pairs and Pairs
-and all the other Hands so far. I guess they're all like that?
+(I hope this doesn't mean that four of the same rank is some other Poker
+thing, though! Ugh. Who comes up with this stuff? Added to --rules.)
 
-(Also, Ties and Draws and stuff - I guess you have to go
-through all of these until one hand wins, or you draw.)
-
-This is now in --rules as well. Hopefully we're like, almost
-done with all these Hands.
+So a "Two Pair" beats any single Pair hand, which beats any single card.
+(I guess you still have to figure that out when there's a tie, though.)
+Crush it! I believe in you!
 """,
 
 # 9
 """
-uuuuuugh Poker is making me write SO MANY EMAILS. So, there
-is also a "Straight" Hand, which are super weird: It's when
-the ranks of all five cards lead into the next one.
+Ugh. So, there's more Hands. Like, a LOT of them. Poker is the worst.
 
-(Um, if you put them in order. Have you been putting them
-into order? It probably matters. By Rank, I mean.)
+The next one is "Three of a Kind" - Like a Pair, except with three of the
+same card, instead of two. (and I guess you resolve ties the same way?) It
+also beats Two Pairs, and Pairs, and all the other Hands so far.
 
-Added to --rules. Crush it?
+This is now in --rules as well. Hopefully we're like, almost done with all
+these Hands!
 """,
 
 # 10
 """
-All right, so, "Flush" hands. Like, I want to flush this dumb
-Poker audiobook down the toilet. Anyway, I guess this is like,
-what they're talking about when they say "Royal Flush" on the
-Poker channel?
+uuuuuugh Poker is making me write SO MANY EMAILS. So, there is also a
+"Straight" Hand, which is super weird: It's when the ranks of all five cards
+lead into the next one. Like 2, 3, 4, 5, 6, or 7, 8, 9, T, J, you get the idea.
 
-A Flush is when all five cards have the same... Suit? And that
-(as usual) beats all the other previous Hands so far.
+(Have you been putting the cards in order by rank? That is probably important.)
 
-Ahh, crap. Have you been deleting the Suits? I think you need
-the suits. If you decided they weren't important for some
-reason, well... Gotta be detail-oriented, you know?
-
-Added to the --rules. Crush stuff?
+Added to --rules. Crush it?
 """,
 
 # 11
 """
-I can't get the stupid FULL HOUSE song out of my head now!
-But it blows my mind, that the show was about Poker this
-whole time! No wonder people like it so much!
+All right, so, "Flush" hands. Like, I want to flush this dumb Poker e-book
+down the toilet! But Kindles are hard to find right now, so I better not.
 
-The show, I mean, not Poker. Poker is making me mad today.
+A Flush is when all five cards have the same... Suit? And that beats all the
+other previous Hands so far.
 
-A Full House is when a Hand has a Three Of A Kind, and a
-Pair in it, and it beats all the previous hands.
-
-(But the Three and the Pair have to be different suits?
-I'm getting a bad feeling about this...)
+Ahh, crap. Have you been deleting the Suits? I think you need the suits. If
+you decided they weren't important for some reason, well... Gotta be
+detail-oriented, you know? Added to the --rules. Crush?
 """,
 
 # 12
 """
-Ugh. Guess What? More Hands.
+I can't get the stupid FULL HOUSE song out of my head now! But it blows my
+mind, that the show was about Poker this whole time! TIL.
 
-The Four Of a Kind is... yeah, you guessed it, just like
-a Pair or a Three of a Kind, but, there's four of the rank!
-And it beats all the previous Hands.
+A Full House is when a Hand has a Three Of A Kind, AND a Pair in it, and
+(go figure) it beats all the other hands. Poker is making me sad today.
 
-Addded to --rules. You have my permission to crush stuff.
+(OH But the Three and the Pair have to be different suits?! I'm starting to
+get a bad feeling about this...)
 """,
 
 # 13
 """
-Okay, so, I think maybe the old Boss-Person kinda missed
-something in all this crazy Poker talk...
+Ugh. Guess What? More Hands.
 
-I think we got the Straight wrong originally - The Suits
-in a Straight CAN'T all be the same Suit... Because there
-is a different Hand for that. (Who came up with all these
-dumb Hands?) So, first, let's make sure Straight hands are
-done right.
+The Four Of a Kind is... yeah, you guessed it, just like a Pair or a Three of
+a Kind, but, with four cards of the rank! And it beats all the previous Hands,
+because of course it does.
+
+Addded to --rules. You have my permission to crush stuff.
+""",
+
+# 14
+"""
+Okay, so, somebody missed something in all this Poker junk: I think we got the
+Straight wrong? The Suits in a Straight CAN'T all be the same Suit... Because
+there is a DIFFERENT HAND for that. (Who came up with all these Hands?) So,
+first, let's make sure Straight hands are done right.
 
 (Straight Hands? is that an Interpol track? I'll check.)
 
 Fixed the --rules. Go forth and crush!
 """,
 
-# 14
+# 15
 """
-Right. So, there are Straights, and there are Flushes, and
-believe it or not, a Straight Flush (true story, I heard
-them say that in a Clint Eastwood movie once).
+Right. So! There are Straights, and there are Flushes, and believe it or not,
+a Straight Flush (true story, I heard that in a Clint Eastwood movie once.)
 
-It means the cards have "sequential" ranks (that's a cool
-Computer Science word for you), AND all the cards also
-have the same Suit. Like, if you got all the Red cards
-with Hearts on them in a row. Well, not all of them,
-because you can only have five cards, but you get the idea.
+It means the cards have "sequential" ranks (that's a cool Computer Science
+word for you), AND all the cards also have the same Suit. Like, if you got all
+the Red cards with Hearts on them in a row... Well, not all of them, because you
+can only have five cards, but you get the idea.
 
 --rules Updated! Proceed with the crushing.
 """,
 
-# 15
+# 16
 """
-It's the Home Stretch, my dude! Bases are loaded,
-and it's nothing but net! Let's touch down the conversion!
+It's the Home Stretch, my dude! Bases are loaded, and it's nothing but net!
+Let's touch down the conversion! (I kind of want to make a Sports Betting site
+now - Are those hard to do? Let's talk tomorrow.)
 
-(I kind of want to make a Sports Betting site now - Are those
-hard to do? Let's talk tomorrow.)
-
-Anyway, now we just need to implement the Royal Flush,
-which is the best kind of Straight Flush, which is the
-Ace, King, Queen, Jack, and 10 of the same card.
-
-I guess in hindsight it's kind of obvious that the best
-Straight Flush would beat the less good Straight Flushes,
-but I guess that's why they gave it a cool name.
+Anyway, now we just need to implement the Royal Flush, which is the best kind
+of Straight Flush, which is an Ace, King, Queen, Jack, and 10 of the same card.
+In hindsight it's kind of obvious that the best Straight Flush would beat the
+less good Straight Flushes, but I guess that's why it gets a cool name.
 
 Nice job crushing it! (after you get Royal Flushes working)
 """,
 
-#16
+#17
 """
-Hey, um, so, thanks for Crushing It, but we have a situation...
+Hey, thanks for Crushing It, but we have a situation - People are, like,
+cheating? The UI folks said something about "web requests" and "dev consoles"
+- I guess it must be Hackers! They're always one step ahead. Anyway, Finance
+is upset, and I told them you fixed it already, so while I don't think this
+will be a big deal - Please do actually fix this. (Before you go home tonight)
 
-The poker rules seem to be working well, but people are, like,
-cheating? The UI folks are saying something about "web requests"
-and "browser dev tools" - I guess it's Hackers! They're always
-one step ahead.
+People are like, making stuff up, and not "POSTing" the Hands they have - We
+need to make sure they aren't copying cards (like, putting the same card in
+their Hand twice, or that the same card isn't in both Hands) - If so, raise
+a ValueError. That should pretty much take care of it?
+""",
 
-Anyway, Finance is upset, and I told them you fixed it, and
-I don't think this is going to be a big deal - But, could you,
-like, also actually fix this? Before you go home tonight.
-
-I guess the problem is that people are like, not POSTing the
-Hands they actually have, and making stuff up - So I
-think as long as you make sure they aren't copying cards
-(like, putting the same card in their Hand twice, or that
-the same card isn't in both Hands) and raise a ValueError,
-that should pretty much take care of it?
-
-I'm about to meet with the Venture Capital peeps about how
-the first day of Poker payouts have gone. Wish me luck!
-
-Tomorrow: Sports Betting! Or fantasy football? Wait, can you
-place bets on Fantasy Football?!? <img src="galaxy_brain.gif">
+#18
 """
+Nice work! You actually Crushed It! And you know what? I'm proud of us.
+
+I'm about to meet with Finance and our Venture Capital peeps about how the
+first day of Poker payouts have gone. Wish me luck!
+
+Tomorrow: Sports Betting! Or fantasy football? Wait, can you place bets on
+Fantasy Football?!? <img src="galaxy_brain.gif">
+
+See you tomorrow!
+""",
+
 ]
