@@ -38,7 +38,6 @@ def compare_cards(card_string1, card_string2):
     """
     Given two cards such as "3H" and "4C", determine which has greater value.
     Given two poker hands, represented by strings, return an integer result:
-        0: Draw (hands have equal value)
         1: Hand 1 Wins
         2: Hand 2 Wins
     """

@@ -1,29 +1,70 @@
 poker_rules = [
     {
-        "level_range": (0, 3),
+        "level": 0,
         "sort_order": 100,
+        "text": """
+score_poker_hands should accept two Hands (strings) and return an Integer.
+""",
+    },
+    {
+        "level_range": (1, 2),
+        "sort_order": 99,
+        "text": """
+Each hand will be a single card, for example, "2H", "5D", "9C", etc.
+(Return 1 if the first hand wins, or 2 if the second hand wins)
+""",
+    },
+    {
+        "level_range": (3, 3),
+        "sort_order": 99,
+        "text": """
+Each hand should be a single card, for example, "2H", "5D", "9C", etc.
+    (Given invalid Ranks or Suits, raise a ValueError!)
+Return 1 if the first hand wins, or 2 if the second hand wins.
+""",
+    },
+    {
+        "level": 4,
+        "sort_order": 99,
+        "text": """
+Each hand should be a space-separated string of cards, e.g. "2H KS 5D TC JH"
+    (Given invalid Ranks or Suits, raise a ValueError!)
+Return 1 if the first hand wins, or 2 if the second hand wins.
+""",
+    },
+    {
+        "level_range": (1, 1),
+        "sort_order": 98,
+        "text": """
+Ranks by value, ascending: 2, 3, 4, 5, 6, 7, 8, 9
+Suits (no particular order): H, D, C, S
+""",
+    },
+    {
+        "level_range": (2, 4),
+        "sort_order": 98,
         "text": """
 Ranks by value, ascending: 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, A
 Suits (no particular order): H, D, C, S
 """,
     },
     {
-        "level": 4,
-        "sort_order": 100,
+        "level": 5,
+        "sort_order": 98,
         "text": """
 Ranks by value, ascending: 2, 3, 4, 5, 6, 7, 8, 9, T, J, Q, K, A
 Suits (no particular order): H, D, C, S
 """,
     },
     {
-        "level_range": (1, 5),
+        "level_range": (1, 6),
         "sort_order": 1,
         "text": """
 Highest Card: The Hand with the single highest-ranked card wins.
 """
     },
     {
-        "level": 6,
+        "level": 7,
         "sort_order": 1,
         "text": """
 Highest Card: The Hand with the single highest-ranked card wins.
@@ -31,14 +72,14 @@ Highest Card: The Hand with the single highest-ranked card wins.
 """
     },
     {
-        "level_range": (5,5),
+        "level_range": (6, 6),
         "sort_order": 2,
         "text": """
 Pair: A Hand containing two cards of the same Rank (of any Suits)
 """
     },
     {
-        "level": 6,
+        "level": 7,
         "sort_order": 2,
         "text": """
 Pair: A Hand containing two cards of the same Rank (of any Suits)
@@ -46,7 +87,7 @@ Pair: A Hand containing two cards of the same Rank (of any Suits)
 """
     },
     {
-        "level": 7,
+        "level": 8,
         "sort_order": 3,
         "text": """
 Two Pairs: A Hand containing two differently-ranked Pairs, as per "Pair"
@@ -54,7 +95,7 @@ Two Pairs: A Hand containing two differently-ranked Pairs, as per "Pair"
 """
     },
     {
-        "level": 8,
+        "level": 9,
         "sort_order": 4,
         "text": """
 Three of a Kind: A Hand containing three cards of the same Rank (any Suits)
@@ -62,7 +103,7 @@ Three of a Kind: A Hand containing three cards of the same Rank (any Suits)
 """
     },
     {
-        "level_range": (9, 10),
+        "level_range": (10, 13),
         "sort_order": 5,
         "text": """
 Straight: A Hand containing five cards of sequential Rank (any Suits)
@@ -70,7 +111,7 @@ Straight: A Hand containing five cards of sequential Rank (any Suits)
 """
     },
     {
-        "level": 10,
+        "level": 11,
         "sort_order": 6,
         "text": """
 Flush: A Hand containing five cards of the same Suit (any Ranks)
@@ -78,7 +119,7 @@ Flush: A Hand containing five cards of the same Suit (any Ranks)
 """
     },
     {
-        "level": 11,
+        "level": 12,
         "sort_order": 7,
         "text": """
 Full House: A Hand containing a Three of a Kind AND a Pair of a different suit
@@ -86,7 +127,7 @@ Full House: A Hand containing a Three of a Kind AND a Pair of a different suit
 """
     },
     {
-        "level": 12,
+        "level": 13,
         "sort_order": 8,
         "text": """
 Four of a Kind: A Hand containing four cards of the same Rank (any Suit)
@@ -94,7 +135,7 @@ Four of a Kind: A Hand containing four cards of the same Rank (any Suit)
 """
     },
     {
-        "level": 13,
+        "level": 14,
         "sort_order": 5,
         "text": """
 Straight: A Hand containing five cards of sequential Rank (but NOT the same Suit - whoops)
@@ -102,7 +143,7 @@ Straight: A Hand containing five cards of sequential Rank (but NOT the same Suit
 """
     },
     {
-        "level": 14,
+        "level": 15,
         "sort_order": 9,
         "text": """
 Straight Flush: A Hand consisting of five sequentially-ranked cards of the same Suit.
@@ -110,11 +151,18 @@ Straight Flush: A Hand consisting of five sequentially-ranked cards of the same 
 """
     },
     {
-        "level": 15,
+        "level": 16,
         "sort_order": 10,
         "text": """
 Royal Flush: The best possible Straight Flush (10, J, Q, K, A of the same Suit)
 (Resolve ties as per Highest Card)
+"""
+    },
+    {
+        "level": 17,
+        "sort_order": 11,
+        "text": """
+Duplicate Cards (within or across hands) should raise a ValueError!
 """
     }
 ]
