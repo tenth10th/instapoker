@@ -8,7 +8,7 @@ def parse_hand(hand_string):
 
     list_of_cards = hand_string.split(" ") # Returns a list of 1 card, if there aren't spaces in hand_string...
     for card in list_of_cards:
-        validate(card) #TODO: change to validate_card
+        validate_card(card)
 
     return list_of_cards
 
@@ -26,15 +26,11 @@ def card_parser(card_string):
     if face_value:
         return face_value
 
-    #raise ValueError("Whoopsie poopsie: Invalid Hand Type (expected String)")
-    #raise ValueError("Whoopsie poopsie: Invalid Suit")
-    #raise ValueError("Whoopsie poopsie: Invalid Rank")
-
     print("card_string: <",repr(card_string),">")
     try:
-        return int(card_string[:])
+        return int(card_string[0:-1])
     except Exception:
-        print(card_string[:])
+        print(card_string[0:-1])
         raise
 
 def compare_cards(card_string1, card_string2):
@@ -57,27 +53,29 @@ class WhoopsiePoopsie(ValueError):
     pass
 
 
-def validate(card):
-    # Dave's Proposal:
-
-    # Once you have the List of Cards, e.g. ["2H", "4C"], then iterate them,
-    # and run both of these checks on each card:
+def validate_card(card):
+    """
+    (This is a docstring, a multi-line comment that can be queried)
+    Validate a card, raising an exception if invalid
+    """    
     if card[-1] not in 'CHSD':
         raise WhoopsiePoopsie("Invalid suit.")
     if card[0:-1] not in {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"}:
         raise WhoopsiePoopsie("Invalid rank the card was: " + card)
-    # And THEN, if we haven't Exception'ed out, return the card...
     
 
 
 # idea dictionary with result_array[value,card]
-def get_highest_card(hand):
+def get_highest_card(card_list):
     max_value = 1
-    for card in hand:
+    highest_card = None
+    for card in card_list:
         print("<",repr(card),">")
-        value = card_parser(card)
-        max_value = max(max_value, value)
-    return max_value
+        rank_value = card_parser(card)
+        if rank_value > max_value:
+            max_value = rank_value
+            highest_card = card
+    return highest_card
 
 
 def score_poker_hands(h1, h2):
@@ -93,13 +91,9 @@ def score_poker_hands(h1, h2):
     card_list_1 = parse_hand(h1)
     card_list_2 = parse_hand(h2)
 
-    # DONE: Are these no longer needed? (now that parse_hand validates?)
-    # for card in card_list_1:
-    #     validate(card)
-        
-    # for card in card_list_2:
-    #     validate(card)
+    high_card_1 = get_highest_card(card_list_1)
+    high_card_2 = get_highest_card(card_list_2)
 
-    result = compare_cards(h1, h2)
+    result = compare_cards(high_card_1, high_card_2)
 
     return result

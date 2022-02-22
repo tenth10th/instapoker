@@ -58,4 +58,4 @@ def test_multi_card_hand():
     assert score_poker_hands("3H AD JC", "6S 10H 2C") == 1
 
 def test_get_highest_card():
-    assert get_highest_card(["6S", "10H", "2C"]) == 10
+    assert get_highest_card(["6S", "10H", "2C"]) == "10H"
