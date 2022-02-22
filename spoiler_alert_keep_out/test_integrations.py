@@ -291,9 +291,11 @@ def test_invalid_rank_inputs(h1, h2):
 @pytest.mark.integration(min_level=4)
 @pytest.mark.parametrize("h1, h2, expected_result", [
     ("4D 3H", "2H 3S", 1),
+    ("9H 5C", "JD 5C", 2),
+    ("9H 5S", "4D 8H", 1),
+    ("5D 8C", "4H 9S", 2),
     ("4C QH KC 9C 6H", "3S 7S AD 5D JC", 2),
-    ("9H 5S", "4D 9H", 1),
-    ("9H 5C", "9S JD", 2),
+    ("JH QD AH KD 2H", "6H JC 8H 4D 5D", 1),
 ])
 def test_multi_card_hands(h1, h2, expected_result):
     """
