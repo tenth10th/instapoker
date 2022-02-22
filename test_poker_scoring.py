@@ -54,8 +54,8 @@ def test_parse_hand():
 def test_parse_single_hand():
     assert parse_hand("3H") == ["3H"]
 
-# def test_multi_card_hand():
-#     assert score_poker_hands("3H 1D JC", "6S 10H 2C") == 1
+def test_multi_card_hand():
+    assert score_poker_hands("3H AD JC", "6S 10H 2C") == 1
 
 def test_get_highest_card():
     assert get_highest_card(["6S", "10H", "2C"]) == 10

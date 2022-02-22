@@ -31,8 +31,11 @@ def card_parser(card_string):
     #raise ValueError("Whoopsie poopsie: Invalid Rank")
 
     print("card_string: <",repr(card_string),">")
-    return int(card_string[0:-1])
-
+    try:
+        return int(card_string[:])
+    except Exception:
+        print(card_string[:])
+        raise
 
 def compare_cards(card_string1, card_string2):
     """
@@ -41,7 +44,7 @@ def compare_cards(card_string1, card_string2):
         1: Hand 1 Wins
         2: Hand 2 Wins
     """
-    card_one = card_parser(card_string1) 
+    card_one = card_parser(card_string1)
     card_two = card_parser(card_string2)
     
     if card_one < card_two:
@@ -54,16 +57,17 @@ class WhoopsiePoopsie(ValueError):
     pass
 
 
-def validate(hand):
+def validate(card):
     # Dave's Proposal:
 
     # Once you have the List of Cards, e.g. ["2H", "4C"], then iterate them,
     # and run both of these checks on each card:
-    if hand[-1] not in 'CHSD':
+    if card[-1] not in 'CHSD':
         raise WhoopsiePoopsie("Invalid suit.")
-    if hand[0:-1] not in {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"}:
-        raise WhoopsiePoopsie("Invalid rank.")
-    # And THEN, if we haven't Exception'ed out, return the hand...
+    if card[0:-1] not in {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"}:
+        raise WhoopsiePoopsie("Invalid rank the card was: " + card)
+    # And THEN, if we haven't Exception'ed out, return the card...
+    
 
 
 # idea dictionary with result_array[value,card]
@@ -89,12 +93,12 @@ def score_poker_hands(h1, h2):
     card_list_1 = parse_hand(h1)
     card_list_2 = parse_hand(h2)
 
-    # TODO: Are these no longer needed? (now that parse_hand validates?)
-    for card in card_list_1:
-        validate(card)
+    # DONE: Are these no longer needed? (now that parse_hand validates?)
+    # for card in card_list_1:
+    #     validate(card)
         
-    for card in card_list_2:
-        validate(card)
+    # for card in card_list_2:
+    #     validate(card)
 
     result = compare_cards(h1, h2)
 
