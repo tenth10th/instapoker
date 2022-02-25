@@ -242,3 +242,20 @@ def pytest_runtest_makereport(item, call):
             result.longrepr = one_liner
 
     return result
+
+
+def pytest_ignore_collect(path, config):
+    """
+    Do not collect Integration ("spoiler alert" folder) Tests, 
+    unless we are in --submit mode.
+
+    (Cuts down on clutter and/or confusion when running local / unit tests)
+
+    path: py._path.local.LocalPath
+    config: PyTest config object
+    returns: Boolean (True for ignore, False for collect)
+    """
+    if ("spoiler_alert_keep_out" in path.strpath):
+        if config.getoption("--submit"):
+            return False
+        return True
