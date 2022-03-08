@@ -285,7 +285,7 @@ def test_invalid_cards(h1, h2):
 @pytest.mark.integration(min_level=4)
 @pytest.mark.parametrize("h1, h2, expected_result", [
     ("4D 3H", "2H 3S", 1),
-    ("9H 5C", "JD 5C", 2),
+    ("9H 5C", "JD 5S", 2),
     ("9H 5S", "4D 8H", 1),
     ("5D 8C", "4H 9S", 2),
     ("4C QH KC 9C 6H", "3S 7S AD 5D JC", 2),
@@ -337,8 +337,8 @@ def test_invalid_obsolete_rank_inputs(h1, h2):
 
 @pytest.mark.integration(min_level=6)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C TD 3H 4S", "4S 7S AD 5D JC", 1),
-    ("3C 5C TD 3H 4S", "JC 7S 4H AD 4S", 2),
+    ("3C 5C TD 3H 4S", "4C 7S AD 5D JC", 1),
+    ("3C 5C TD 3H 4S", "JC 7S 4H AD 4C", 2),
 ])
 def test_pair_hands(h1, h2, expected_result):
     """
@@ -354,9 +354,9 @@ def test_pair_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=7)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C AC TD 3H 4S", "JC 7S 4H QD 4S", 2),
-    ("3C AC QH 3H 4S", "5C AS 3H QD 3S", 2),
-    ("3C AC QH 3H 4S", "4C AS 3H QD 3S", 0),
+    ("3C AC TD 3H 4S", "JC 7S 4H QD 4C", 2),
+    ("3C AC QH 3H 4S", "5C AS 3D QD 3S", 2),
+    ("3C AC QH 3H 4S", "4C AS 3D QD 3S", 0),
 ])
 def test_pair_ties_whoops(h1, h2, expected_result):
     """
@@ -389,7 +389,7 @@ def test_two_pair_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=9)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C 3D 3H 4S", "JC 7S 4H 7D 4S", 1),
+    ("3C 5C 3D 3H 4S", "JC 7S 4H 7D 4C", 1),
     ("3C KC 3D 3H 4S", "JC 7S 4H 7D 7H", 2),
 ])
 def test_three_of_a_kind_hands(h1, h2, expected_result):
@@ -407,9 +407,9 @@ def test_three_of_a_kind_hands(h1, h2, expected_result):
 @pytest.mark.integration(min_level=10, max_level=13)
 @pytest.mark.parametrize("h1, h2, expected_result", [
     ("4C 6C 2D 5H 3S", "JC 7S 4H 7D 7H", 1),
-    ("4C 6C 2D 5H 3S", "2C 6S 5H 3D 4S", 2),
     ("5C 7C 3C 6C 4C", "JC 7S 4H 7D 7H", 1),
     ("KC 6C KD 5H KS", "5S 9S 8S 6S 7S", 2),
+    ("4C 6C 2D 5H 3H", "2S 6S 5S 3S 4S", 0),
 ])
 def test_straight_hands(h1, h2, expected_result):
     """
@@ -425,7 +425,7 @@ def test_straight_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=11)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("7C 5C 2C 3C 4C", "4C 8S 7H 5D 6S", 1),
+    ("7C 5C 2C 3C 4C", "4S 8S 7H 5D 6S", 1),
     ("7C 5C 2C 3C 4C", "4S 8S 7S 5S 6S", 2),
 ])
 def test_flush_hands(h1, h2, expected_result):
@@ -442,8 +442,8 @@ def test_flush_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=12)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3D 3S 4C 3H 4D", "4S 8S 7S 5S 6S", 1),
-    ("3D 3S 4C 3H 4D", "4H 4S 5C 4B 5H", 2),
+    ("3D 3S 4C 3H 4D", "4S 8S 9S 5S 6D", 1),
+    ("2D 2S 3C 2H 3D", "4H 4S 5C 4D 5H", 2),
 ])
 def test_full_house_hands(h1, h2, expected_result):
     """
@@ -459,8 +459,8 @@ def test_full_house_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=13)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C 3D 3H 3S", "4H 4S 5C 4B 5H", 1),
-    ("3C KC 3D 3H 3S", "4H 4S 4C 5H 4B", 2),
+    ("3C 5C 3D 3H 3S", "4H 4S 5S 4D 5H", 1),
+    ("3C KC 3D 3H 3S", "4H 4S 4C 5H 4D", 2),
 ])
 def test_four_of_a_kind_hands(h1, h2, expected_result):
     """
@@ -474,10 +474,12 @@ def test_four_of_a_kind_hands(h1, h2, expected_result):
 ##############################################
 
 
-@pytest.mark.integration(min_level=14)
+@pytest.mark.integration(min_level=14, max_level=14)
 @pytest.mark.parametrize("h1, h2, expected_result", [
     ("2S 4S 3D 5D 6H", "7S 4C 3S 7D 7H", 1),
-    ("AC AH AD 3H AS", "TC 9D JS KH QD", 2),
+    ("4C 6C 2D 5H 3H", "2S 6S 5D 3S 4S", 0),
+    ("2C 6C 5C 3C 4C", "3S 7H 6S 4S 5S", 1),
+    ("TC 9D JH QC KH", "KS TS QS 9S JS", 2),
 ])
 def test_straight_hands_whoops(h1, h2, expected_result):
     """
@@ -557,8 +559,8 @@ def test_royal_flush_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=17)
 @pytest.mark.parametrize("h1, h2, duplication", [
-    ("JC AC AC 1C 8D", "2S 5D 3S 6H 4S", "AC twice in one hand"),
-    ("JC AC TC 1C 8D", "JS KC TC 6H 4S", "TC in both hands"),
+    ("JC AC AC 2C 8D", "2S 5D 3S 6H 4S", "AC twice in one hand"),
+    ("JC AC TC 2C 8D", "JS KC TC 6H 4S", "TC in both hands"),
 ])
 def test_duplicate_cards(h1, h2, duplication):
     """
