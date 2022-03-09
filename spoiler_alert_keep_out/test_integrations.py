@@ -20,7 +20,7 @@ except ImportError:
 @pytest.mark.integration
 def test_poker_scoring_api_module_exists():
     """
-    poker_scoring_api.py is present
+    The poker_scoring_api.py file is present
     """
     assert poker_scoring_api is not None, (
         "poker_scoring_api.py module must be present!"
@@ -30,7 +30,7 @@ def test_poker_scoring_api_module_exists():
 @pytest.mark.integration
 def test_score_poker_hands_exists():
     """
-    poker_scoring_api.py contains score_poker_hands
+    poker_scoring_api.py contains a "score_poker_hands" object
     """
     assert hasattr(poker_scoring_api, "score_poker_hands"), (
         "poker_scoring_api.py must contain a \"score_poker_hands\" function"
@@ -63,13 +63,7 @@ def test_poker_scoring_api():
     """
     score_poker_hands accepts two strings
     """
-    error = ""
-    try:
-        score_poker_hands("2D", "2H")
-    except TypeError as e:
-        error = str(e)
-    if error:
-        pytest.fail(error)
+    score_poker_hands("2D", "2H")
 
 
 @pytest.mark.integration(min_level=0)
@@ -161,8 +155,8 @@ def test_10_single_card_hands(h1, h2, expected_result):
 @pytest.mark.integration(min_level=3)
 @pytest.mark.parametrize("h1, h2", [
     (None, None),
-    ("1S", None),
-    (None, "1S"),
+    ("2S", None),
+    (None, "9D"),
 ])
 def test_invalid_None_inputs(h1, h2):
     """
@@ -182,8 +176,8 @@ def test_invalid_None_inputs(h1, h2):
 @pytest.mark.integration(min_level=3)
 @pytest.mark.parametrize("h1, h2", [
     ("", ""),
-    ("1S", ""),
-    ("", "1S"),
+    ("2C", ""),
+    ("", "KD"),
 ])
 def test_invalid_empty_inputs(h1, h2):
     """
@@ -203,7 +197,7 @@ def test_invalid_empty_inputs(h1, h2):
 @pytest.mark.integration(min_level=3)
 @pytest.mark.parametrize("h1, h2", [
     (1, 2),
-    ("1S", 2),
+    ("4S", 2),
     (3.0, "2D"),
 ])
 def test_invalid_numeric_inputs(h1, h2):
@@ -264,11 +258,11 @@ def test_invalid_rank_inputs(h1, h2):
 
 @pytest.mark.integration(min_level=3)
 @pytest.mark.parametrize("h1, h2", [
-    ("11H", "1C"),
-    ("DF", "33U"),
+    ("11H", "1F"),
+    ("DR", "33U"),
     ("TK421", "|-_-|"),
 ])
-def test_invalid_rank_inputs(h1, h2):
+def test_invalid_cards(h1, h2):
     """
     Hands containing completely invalid cards raise ValueErrors
     """
@@ -291,9 +285,11 @@ def test_invalid_rank_inputs(h1, h2):
 @pytest.mark.integration(min_level=4)
 @pytest.mark.parametrize("h1, h2, expected_result", [
     ("4D 3H", "2H 3S", 1),
+    ("9H 5C", "JD 5S", 2),
+    ("9H 5S", "4D 8H", 1),
+    ("5D 8C", "4H 9S", 2),
     ("4C QH KC 9C 6H", "3S 7S AD 5D JC", 2),
-    ("9H 5S", "4D 9H", 1),
-    ("9H 5C", "9S JD", 2),
+    ("JH QD AH KD 2H", "6H JC 8H 4D 5D", 1),
 ])
 def test_multi_card_hands(h1, h2, expected_result):
     """
@@ -341,8 +337,8 @@ def test_invalid_obsolete_rank_inputs(h1, h2):
 
 @pytest.mark.integration(min_level=6)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C TD 3H 4S", "4S 7S AD 5D JC", 1),
-    ("3C 5C TD 3H 4S", "JC 7S 4H AD 4S", 2),
+    ("3C 5C TD 3H 4S", "4C 7S AD 5D JC", 1),
+    ("3C 5C TD 3H 4S", "JC 7S 4H AD 4C", 2),
 ])
 def test_pair_hands(h1, h2, expected_result):
     """
@@ -358,9 +354,9 @@ def test_pair_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=7)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C AC TD 3H 4S", "JC 7S 4H QD 4S", 2),
-    ("3C AC QH 3H 4S", "5C AS 3H QD 3S", 2),
-    ("3C AC QH 3H 4S", "4C AS 3H QD 3S", 0),
+    ("3C AC TD 3H 4S", "JC 7S 4H QD 4C", 2),
+    ("3C AC QH 3H 4S", "5C AS 3D QD 3S", 2),
+    ("3C AC QH 3H 4S", "4C AS 3D QD 3S", 0),
 ])
 def test_pair_ties_whoops(h1, h2, expected_result):
     """
@@ -376,7 +372,7 @@ def test_pair_ties_whoops(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=8)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C 1D 3H 5S", "4S 7S 4D 5D JC", 1),
+    ("3C 5C 2D 3H 5S", "4S 7S 4D 5D JC", 1),
     ("3C 5C AD 3H 5S", "JC 6S 4H 6D 4S", 2),
 ])
 def test_two_pair_hands(h1, h2, expected_result):
@@ -393,7 +389,7 @@ def test_two_pair_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=9)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C 3D 3H 4S", "JC 7S 4H 7D 4S", 1),
+    ("3C 5C 3D 3H 4S", "JC 7S 4H 7D 4C", 1),
     ("3C KC 3D 3H 4S", "JC 7S 4H 7D 7H", 2),
 ])
 def test_three_of_a_kind_hands(h1, h2, expected_result):
@@ -410,8 +406,10 @@ def test_three_of_a_kind_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=10, max_level=13)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C 1D 4H 2S", "JC 7S 4H 7D 7H", 1),
-    ("3C 5C 1D 4H 2S", "2C 6S 5H 3D 4S", 2),
+    ("4C 6C 2D 5H 3S", "JC 7S 4H 7D 7H", 1),
+    ("5C 7C 3C 6C 4C", "JC 7S 4H 7D 7H", 1),
+    ("KC 6C KD 5H KS", "5S 9S 8S 6S 7S", 2),
+    ("4C 6C 2D 5H 3H", "2S 6S 5S 3S 4S", 0),
 ])
 def test_straight_hands(h1, h2, expected_result):
     """
@@ -427,8 +425,8 @@ def test_straight_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=11)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("7C 5C 1C 3C 4C", "4C 8S 7H 5D 6S", 1),
-    ("7C 5C 1C 3C 4C", "4S 8S 7S 5S 6S", 2),
+    ("7C 5C 2C 3C 4C", "4S 8S 7H 5D 6S", 1),
+    ("7C 5C 2C 3C 4C", "4S 8S 7S 5S 6S", 2),
 ])
 def test_flush_hands(h1, h2, expected_result):
     """
@@ -444,8 +442,8 @@ def test_flush_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=12)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3D 3S 4C 3H 4D", "2C 5C 1C 3C 4C", 1),
-    ("3D 3S 4C 3H 4D", "4H 4S 5C 4B 5H", 2),
+    ("3D 3S 4C 3H 4D", "4S 8S 9S 5S 6D", 1),
+    ("2D 2S 3C 2H 3D", "4H 4S 5C 4D 5H", 2),
 ])
 def test_full_house_hands(h1, h2, expected_result):
     """
@@ -461,8 +459,8 @@ def test_full_house_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=13)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C 3D 3H 3S", "4H 4S 5C 4B 5H", 1),
-    ("3C KC 3D 3H 3S", "4H 4S 4C 5H 4B", 2),
+    ("3C 5C 3D 3H 3S", "4H 4S 5S 4D 5H", 1),
+    ("3C KC 3D 3H 3S", "4H 4S 4C 5H 4D", 2),
 ])
 def test_four_of_a_kind_hands(h1, h2, expected_result):
     """
@@ -476,10 +474,12 @@ def test_four_of_a_kind_hands(h1, h2, expected_result):
 ##############################################
 
 
-@pytest.mark.integration(min_level=14)
+@pytest.mark.integration(min_level=14, max_level=14)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("3C 5C 1D 3H 4S", "4S 7S AD 5D JC", 1),
-    ("3C 5C 1D 3H 4S", "JC 7S 4H AD 4S", 2),
+    ("2S 4S 3D 5D 6H", "7S 4C 3S 7D 7H", 1),
+    ("4C 6C 2D 5H 3H", "2S 6S 5D 3S 4S", 0),
+    ("2C 6C 5C 3C 4C", "3S 7H 6S 4S 5S", 1),
+    ("TC 9D JH QC KH", "KS TS QS 9S JS", 2),
 ])
 def test_straight_hands_whoops(h1, h2, expected_result):
     """
@@ -495,8 +495,8 @@ def test_straight_hands_whoops(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=15)
 @pytest.mark.parametrize("h1, h2, expected_result", [
-    ("2C 5C 1C 3C 4C", "JC 7S 4H AD 4S", 1),
-    ("2C 5C 1C 3C 4C", "2S 5S 3S 6S 4S", 2),
+    ("3C 6C 2C 4C 5C", "JC 7S 4H AD 4S", 1),
+    ("3C 6C 2C 4C 5C", "3S 6S 4S 7S 5S", 2),
     ("3C 6C 4C 7C 5C", "2S 5S 3S 6S 4S", 1),
     ("3C 6C 4C 7C 5C", "3S 6S 4S 7S 5S", 0),
 ])
@@ -559,8 +559,8 @@ def test_royal_flush_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=17)
 @pytest.mark.parametrize("h1, h2, duplication", [
-    ("JC AC AC 1C 8D", "2S 5D 3S 6H 4S", "AC twice in one hand"),
-    ("JC AC TC 1C 8D", "JS KC TC 6H 4S", "TC in both hands"),
+    ("JC AC AC 2C 8D", "2S 5D 3S 6H 4S", "AC twice in one hand"),
+    ("JC AC TC 2C 8D", "JS KC TC 6H 4S", "TC in both hands"),
 ])
 def test_duplicate_cards(h1, h2, duplication):
     """

@@ -10,7 +10,7 @@ score_poker_hands should accept two Hands (strings) and return an Integer.
         "level_range": (1, 2),
         "sort_order": 99,
         "text": """
-Each hand will be a single card, for example, "2H", "5D", "9C", etc.
+Each hand will be a single card, for example, "2H" for Two of Hearts
 (Return 1 if the first hand wins, or 2 if the second hand wins)
 """,
     },
@@ -18,7 +18,7 @@ Each hand will be a single card, for example, "2H", "5D", "9C", etc.
         "level_range": (3, 3),
         "sort_order": 99,
         "text": """
-Each hand should be a single card, for example, "2H", "5D", "9C", etc.
+Each hand should be a single card, for example, "2H" for the Two of Hearts
     (Given invalid Ranks or Suits, raise a ValueError!)
 Return 1 if the first hand wins, or 2 if the second hand wins.
 """,
@@ -27,7 +27,7 @@ Return 1 if the first hand wins, or 2 if the second hand wins.
         "level": 4,
         "sort_order": 99,
         "text": """
-Each hand should be a space-separated string of cards, e.g. "2H KS 5D TC JH"
+Each hand should be a string of space-separated cards, e.g. "2H KS 5D 9C JH"
     (Given invalid Ranks or Suits, raise a ValueError!)
 Return 1 if the first hand wins, or 2 if the second hand wins.
 """,

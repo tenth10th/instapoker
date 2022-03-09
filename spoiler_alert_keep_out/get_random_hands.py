@@ -4,7 +4,9 @@ import random
 ranks = list("23456789TJQKA")
 suits = list("HDCS")
 
-all_cards = [card[0] + card[1] for card in itertools.product(ranks, suits)]
+all_cards = [
+    ''.join(card) for card in itertools.product(ranks, suits)
+]
 
 def get_random_hands(hand_count):
     i = 0
