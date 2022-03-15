@@ -26,7 +26,7 @@ def card_parser(card_string):
     if face_value:
         return face_value
 
-    print("card_string: <",repr(card_string),">")
+    # print("card_string: <",repr(card_string),">")
     try:
         return int(card_string[0:-1])
     except Exception:
@@ -65,19 +65,16 @@ def validate_card(card):
         raise WhoopsiePoopsie("Invalid rank the card was: " + card)
     
 
-
 # idea dictionary with result_array[value,card]
-def get_highest_card(card_list):
-    max_value = 1
-    highest_card = None
+def get_sorted_hand(card_list):
+    array = list()
     for card in card_list:
-        print("<",repr(card),">")
-        rank_value = card_parser(card)
-        if rank_value > max_value:
-            max_value = rank_value
-            highest_card = card
-    return highest_card
+        array.append(card_parser(card))
+    array.sort(reverse=True)
+    return array
 
+# def new_function(list1, list2):
+#     return 0, 1, 2
 
 def score_poker_hands(h1, h2):
     """
@@ -97,12 +94,37 @@ def score_poker_hands(h1, h2):
     card_list_1 = parse_hand(h1)
     card_list_2 = parse_hand(h2)
 
-    high_card_1 = get_highest_card(card_list_1)
-    high_card_2 = get_highest_card(card_list_2)
+    sorted_hand_1 = get_sorted_hand(card_list_1)
+    sorted_hand_2 = get_sorted_hand(card_list_2)
 
-    result = compare_cards(high_card_1, high_card_2)
+    return compare_rank_lists (sorted_hand_1, sorted_hand_2)
 
-    return result
+def compare_rank_lists(rank_list_1, rank_list_2):
+    if rank_list_1 > rank_list_2:
+        return 1
+    elif rank_list_1 < rank_list_2:
+        return 2
+    return 0
+
+def compare_pair_hands(hand1, hand2):
+    # Return 0, 1, or 2, to indicate a winning hand (or a draw) based on pairs
+    # potentially a "better" version of pair_beats_non_pair
+    pair_map1 = dict()
+    pair_map2 = dict()
+    for card in get_sorted_hand(hand1):
+        if card in pair_map1:
+            pair_map1[card] += 1
+        else:
+            pair_map1[card] = 1    
+    for card in get_sorted_hand(hand2):
+        if card in pair_map2:
+            pair_map2[card] += 1
+        else:
+            pair_map2[card] = 1
+    print('map1: ', end='')
+    print(pair_map1)
+    print('map2: ', end='')
+    print(pair_map2)
 
 def has_pair(hand):
     list_of_cards = parse_hand(hand)
@@ -123,3 +145,4 @@ def pair_beats_non_pair(h1, h2):
     if pair2 and not pair1:
         return 2
     return 0
+
