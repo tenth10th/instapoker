@@ -11,6 +11,7 @@ pytest-pspec = "*"
 flake8 = "*"
 black = "*"
 rope = "*"
+ipykernel = "*"
 
 [requires]
 python_version = "3.8"

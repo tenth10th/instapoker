@@ -1,6 +1,6 @@
 from poker_scoring_api import (
     score_poker_hands, card_parser, compare_cards, parse_hand, 
-    get_highest_card)
+    get_highest_card, has_pair, pair_beats_non_pair)
 
 import pytest
 
@@ -48,6 +48,10 @@ def test_invalid_rank():
     with pytest.raises(ValueError, match = "Invalid rank."):
         assert score_poker_hands("ZH","14H")
 
+def test_invalid_rank():
+    with pytest.raises(ValueError, match = "Invalid rank."):
+        assert score_poker_hands("ZH","10H")
+
 def test_parse_hand():
     assert parse_hand("3H 2D JC") == ["3H", "2D", "JC"]
 
@@ -55,7 +59,26 @@ def test_parse_single_hand():
     assert parse_hand("3H") == ["3H"]
 
 def test_multi_card_hand():
-    assert score_poker_hands("3H AD JC", "6S 10H 2C") == 1
+    assert score_poker_hands("3H AD JC", "6S TH 2C") == 1
 
 def test_get_highest_card():
-    assert get_highest_card(["6S", "10H", "2C"]) == "10H"
+    assert get_highest_card(["6S", "TH", "2C"]) == "TH"
+
+def test_has_pair():
+    assert has_pair("2H 7C TS") == False
+    assert has_pair("2H 2S TS") == True
+    assert has_pair("2H 2S") == True
+
+def test_pair_beats_non_pair():
+    assert pair_beats_non_pair("2H 2S", "7C TS") == 1
+    assert pair_beats_non_pair("3H 2S", "7C 7S") == 2
+    assert pair_beats_non_pair("2H 6S", "7C TS") == 0
+
+def test_score_poker_hands_pair():
+    assert score_poker_hands("2H 2S", "7C TS") == 1
+
+def test_score_poker_hand_tie():
+    assert score_poker_hands("6D", "6C") == 0
+    assert score_poker_hands("6D 6C", "6H 6S") == 0
+    assert score_poker_hands("6D 5C", "6H 3S") == 1
+    

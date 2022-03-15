@@ -18,7 +18,7 @@ def card_parser(card_string):
     Given a string representation of a card, like "2H", determine a value
     (Which we can use to compare, and find a "winner")
     """
-    face_card_map = {"J": 11, "Q": 12, "K": 13, "A": 14}
+    face_card_map = {"T": 10, "J": 11, "Q": 12, "K": 13, "A": 14}
     value = card_string[0:-1]
 
     face_value = face_card_map.get(value.upper())
@@ -39,6 +39,7 @@ def compare_cards(card_string1, card_string2):
     Given two poker hands, represented by strings, return an integer result:
         1: Hand 1 Wins
         2: Hand 2 Wins
+        0: Draw or Tie
     """
     card_one = card_parser(card_string1)
     card_two = card_parser(card_string2)
@@ -60,7 +61,7 @@ def validate_card(card):
     """    
     if card[-1] not in 'CHSD':
         raise WhoopsiePoopsie("Invalid suit.")
-    if card[0:-1] not in {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"}:
+    if card[0:-1] not in {"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}:
         raise WhoopsiePoopsie("Invalid rank the card was: " + card)
     
 
@@ -86,8 +87,13 @@ def score_poker_hands(h1, h2):
         2: Hand 2 Wins
 
     Before: "2H"
-    After: "3H 1D JC" vs "6S 10H 2A" (first hand wins - highest card Jack)
+    After: "3H 1D JC" vs "6S TH 2A" (first hand wins - highest card Jack)
     """
+    pair_results = pair_beats_non_pair(h1, h2)
+    
+    if pair_results:
+        return pair_results
+
     card_list_1 = parse_hand(h1)
     card_list_2 = parse_hand(h2)
 
@@ -97,3 +103,23 @@ def score_poker_hands(h1, h2):
     result = compare_cards(high_card_1, high_card_2)
 
     return result
+
+def has_pair(hand):
+    list_of_cards = parse_hand(hand)
+    set_of_ranks = set()
+    for card in list_of_cards:
+        set_of_ranks.add(card[0])
+    print("list_of_cards:", list_of_cards)
+    print("set_of_ranks:", set_of_ranks)
+    print("list length, set length:", len(list_of_cards), len(set_of_ranks))
+    return len(list_of_cards) != len(set_of_ranks)
+
+def pair_beats_non_pair(h1, h2):
+    pair1 = has_pair(h1)
+    pair2 = has_pair(h2)
+
+    if pair1 and not pair2:
+        return 1
+    if pair2 and not pair1:
+        return 2
+    return 0

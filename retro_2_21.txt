@@ -1,0 +1,32 @@
+# What did you feel
+
+Appreciative, that Lewis wanted to follow my intention. Thanks!
+
+Bad, that we didn't get as far while I was driving for Lewis -
+    Very complex, a lot of catching up to do
+    We should let the Navigator talk (and ask us questions as needed)
+
+    (Lewis's take: Asked for input, and got it - Not a problem)
+
+# What did you notice
+
+   "Completion Bias"?  When you complete something, you get a good dopamine hit (i.e. it feels good!)
+
+    IF you try to fix something, and it breaks more tests than were originally broken - It's probably not a "fix"
+        (It's a new bug, or maybe just some refactoring to consider)
+        Keep an eye on that "X failed" count at the bottom!
+
+# What did you learn
+
+    Always stop at a place where you know what the next step is!
+        This was a great example...
+    
+        Consider stopping earlier (sacrificing some time) to end a session cleanly.
+
+        If you leave when you're happy (with dopamine in your brain), it makes you want to come back!
+            Leaving something incomplete, or with a bug, can make you feel bad about the code
+    
+    Capturing your TODO and FIXME comments in code can be helpful! (But keep them clean, delete them later)
+        Or in your Commit notes!
+
+    TDD can help you evaluate new changes...
