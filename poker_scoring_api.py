@@ -145,4 +145,3 @@ def pair_beats_non_pair(h1, h2):
     if pair2 and not pair1:
         return 2
     return 0
-
