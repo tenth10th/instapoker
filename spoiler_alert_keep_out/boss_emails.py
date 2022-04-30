@@ -16,7 +16,7 @@ Let's do this!
 The UI team has decided to represent Poker Hands as pairs of Ranks and Suits,
 in that order: So "2H" for a Two of Hearts, "5D" for a Five of Diamonds, etc.
 For now, let's assume each hand is a single card - I've added some ranks and
-suits to the --rules. The basic rule sounds pretty simple:
+suits to the --rules to get us started. The basic rule sounds pretty simple:
 
   * The hand with the highest-ranked card wins! (I guess Suits don't matter?)
 
@@ -108,8 +108,9 @@ this Google I found that the two Pairs have to be of different ranks!?
 (I hope this doesn't mean that four of the same rank is some other Poker
 thing, though! Ugh. Who comes up with this stuff? Added to --rules.)
 
-So a "Two Pair" beats any single Pair hand, which beats any single card.
+So a "Two Pair" beats any "Pair" hand, which beats any single card.
 (I guess you still have to figure that out when there's a tie, though.)
+
 Crush it! I believe in you!
 """,
 
