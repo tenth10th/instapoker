@@ -41,8 +41,8 @@ def display_test_level_info(level, submit):
 def display_poker_rules(level):
     display_rules = list()
     for r in poker_rules:
-        rule_level = r.get('level')
-        rule_level_range = r.get('level_range')
+        rule_level = r.get("level")
+        rule_level_range = r.get("level_range")
 
         if rule_level and rule_level > level:
             continue
@@ -54,9 +54,9 @@ def display_poker_rules(level):
 
         display_rules.append(r)
 
-    display_rules.sort(key=lambda x: x.get('sort_order'), reverse=True)
+    display_rules.sort(key=lambda x: x.get("sort_order"), reverse=True)
 
     print()
     for r in display_rules:
-        print(r.get('text', '').strip())
+        print(r.get("text", "").strip())
         print()
