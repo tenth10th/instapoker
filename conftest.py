@@ -8,6 +8,7 @@ from spoiler_alert_keep_out.level_documentation import (
     display_boss_email,
     display_poker_rules,
 )
+from typing import Optional
 
 debug = False
 
@@ -18,7 +19,7 @@ ALL_LEVEL_MARKS = (MIN_LEVEL, MAX_LEVEL)
 
 LEVEL_STATE_PATH = "spoiler_alert_keep_out/level_state.json"
 
-level_state = {}
+level_state: dict[str, str] = {}
 
 
 @dataclass
@@ -28,8 +29,8 @@ class IntegrationStatus:
     """
 
     is_integration: bool = False
-    min_level: int = None
-    max_level: int = None
+    min_level: Optional[int] = None
+    max_level: Optional[int] = None
 
     def __bool__(self):
         """
