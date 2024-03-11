@@ -7,4 +7,4 @@ tasks:
 vscode:
   extensions:
     - ms-python.python
-
+    - ms-python.debugpy
