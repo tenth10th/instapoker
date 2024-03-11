@@ -11,20 +11,22 @@ from spoiler_alert_keep_out.level_documentation import (
 
 debug = False
 
-MIN_LEVEL = 'min_level'
-MAX_LEVEL = 'max_level'
-INTEGRATION = 'integration'
+MIN_LEVEL = "min_level"
+MAX_LEVEL = "max_level"
+INTEGRATION = "integration"
 ALL_LEVEL_MARKS = (MIN_LEVEL, MAX_LEVEL)
 
-LEVEL_STATE_PATH = 'spoiler_alert_keep_out/level_state.json'
+LEVEL_STATE_PATH = "spoiler_alert_keep_out/level_state.json"
 
 level_state = {}
+
 
 @dataclass
 class IntegrationStatus:
     """
     Stores integration test status, and level ranges (if applicable)
     """
+
     is_integration: bool = False
     min_level: int = None
     max_level: int = None
@@ -65,7 +67,8 @@ def pytest_configure(config):
     Register "integration" marker that takes optional level range arguments
     """
     config.addinivalue_line(
-        "markers", "integration(min_level, max_level): Only run with --submit, if not outside level range"
+        "markers",
+        "integration(min_level, max_level): Only run with --submit, if not outside level range",
     )
 
     level = 0
@@ -84,9 +87,11 @@ def pytest_configure(config):
             pass
     else:
         try:
-            level = int(level_state['current_level'])
+            level = int(level_state["current_level"])
         except (ValueError, TypeError):
-            print(f"Ignoring invalid current_level state: {level_state['current_level']}")
+            print(
+                f"Ignoring invalid current_level state: {level_state['current_level']}"
+            )
             pass
 
     if debug:
@@ -109,8 +114,7 @@ def get_integration_status(item):
     (Both min_level and max_level default to None if undefined)
     """
     integration_marks = [
-        mark for mark in item.iter_markers()
-        if mark.name == INTEGRATION
+        mark for mark in item.iter_markers() if mark.name == INTEGRATION
     ]
     if not integration_marks:
         return IntegrationStatus(is_integration=False)
@@ -165,11 +169,15 @@ def pytest_sessionfinish(session, exitstatus):
         print(f"status_int: {status_int}")
         print(f"submit active: {submitted}")
     if submitted and status_int == 0:
-        level_state['current_level'] += 1
+        level_state["current_level"] += 1
         write_level_state(level_state)
-        print(f"\n\n* * * All Tests Passed: Advancing to level {level_state['current_level']}!  (New --email recieved!) * * *")
+        print(
+            f"\n\n* * * All Tests Passed: Advancing to level {level_state['current_level']}!  (New --email recieved!) * * *"
+        )
     elif submitted:
-        print(f"\n\n(Some Tests Failed - Remaining on level {level_state['current_level']})")
+        print(
+            f"\n\n(Some Tests Failed - Remaining on level {level_state['current_level']})"
+        )
 
 
 def load_level_state():
@@ -178,7 +186,7 @@ def load_level_state():
     """
     if not exists(LEVEL_STATE_PATH):
         return {"current_level": 0}
-    with open(LEVEL_STATE_PATH, 'r') as f:
+    with open(LEVEL_STATE_PATH, "r") as f:
         try:
             level_state = json.loads(f.read())
             if debug:
@@ -193,7 +201,7 @@ def write_level_state(level_state):
     """
     Write current (level) config out to file
     """
-    with open(LEVEL_STATE_PATH, 'w') as f:
+    with open(LEVEL_STATE_PATH, "w") as f:
         try:
             if debug:
                 print(f"writing level_state: {level_state}")
@@ -221,21 +229,18 @@ def pytest_runtest_makereport(item, call):
         return
 
     result = test_run.get_result()
-    if result.outcome == 'failed':
+    if result.outcome == "failed":
         # Stop PyTest after the first failed Integration test
         item.session.shouldfail = "(Integration Test Failed)"
 
         # Honor --full-trace and --tb by not altering the traceback!
-        full_trace = item.config.getoption('--full-trace')
-        tb = item.config.getoption('--tb')
-        if full_trace or tb != 'auto':
+        full_trace = item.config.getoption("--full-trace")
+        tb = item.config.getoption("--tb")
+        if full_trace or tb != "auto":
             return
 
         # Re-render the result repr as a single-line traceback string
-        one_liner = item._repr_failure_py(
-            call.excinfo,
-            style="no"
-        )
+        one_liner = item._repr_failure_py(call.excinfo, style="no")
         one_liner_str = str(one_liner)
         # On AssertionError, or pytest.fail(), use the single-line traceback!
         if "AssertionError" in one_liner_str or "Failed:" in one_liner_str:
@@ -246,7 +251,7 @@ def pytest_runtest_makereport(item, call):
 
 def pytest_ignore_collect(path, config):
     """
-    Do not collect Integration ("spoiler alert" folder) Tests, 
+    Do not collect Integration ("spoiler alert" folder) Tests,
     unless we are in --submit mode.
 
     (Cuts down on clutter and/or confusion when running local / unit tests)
@@ -255,7 +260,7 @@ def pytest_ignore_collect(path, config):
     config: PyTest config object
     returns: Boolean (True for ignore, False for collect)
     """
-    if ("spoiler_alert_keep_out" in path.strpath):
+    if "spoiler_alert_keep_out" in path.strpath:
         if config.getoption("--submit"):
             return False
         return True
