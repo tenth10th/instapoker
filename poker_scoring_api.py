@@ -1,70 +1,69 @@
-def score_poker_hands(hand1, hand2):
+from typing import Tuple, Iterable
+
+# TODO: Implement poker scoring api here
+def score_poker_hands(hand1: str, hand2:str) -> int:
     """
-    Given two hands, return an integer indicating which hand won (1 or 2)
-
-    Currently, each hand consists of a single card...
-
-    Currently, the hand with the highest ranked card wins...
+    Accept two hands as strings, return an integer
     """
-    # Validate that both hands are strings!
-    if (not isinstance(hand1, str)) or (not isinstance(hand2, str)):
-        raise ValueError("hand is not a string")
+    if hand1 == None or hand2 == None:
+        raise ValueError('Bad input!')
 
-    rank1 = get_rank(hand1)
-    rank2 = get_rank(hand2)
+    split_hand1 = hand1.split(' ')
+    split_hand_2 = hand2.split(' ')
 
-    if rank1 is None:
-        raise ValueError("hand1 invalid rank")
-    if rank2 is None:
-        raise ValueError("hand2 invalid rank")
+    max_hand_1 = max([parse_card(hand)[0] for hand in split_hand1])
+    max_hand_2 = max([parse_card(hand)[0] for hand in split_hand_2])
 
-    suit1 = get_suit(hand1)
-    suit2 = get_suit(hand2)
+    return 1 if max_hand_1 > max_hand_2 else 2
 
-    if suit1 is None:
-        raise ValueError("hand1 invalid suit")
-    if suit2 is None:
-        raise ValueError("hand2 invalid suit")
+def parse_card(card: str) -> Tuple[str, str]:
+    if card == None or len(card) < 2:
+        raise ValueError('Bad card!')
 
-    if get_rank(hand1) > get_rank(hand2):
-        return 1
-    else:
-        return 2
+    rank = card[0:-1]
+    suit = card[-1]
 
+    # Mapping of Card ranks to comparable integers
+    rank_map = {str(i): i for i in range(2, 11)}
+    rank_map.update({
+        "J": 11,
+        "Q": 12,
+        "K": 13,
+        "A": 14,
+    })
 
-def get_rank(card):
-    """
-    Return card's rank as an integer (or None if invalid)
-    """
-    str_rank = card[:-1]
+    try:
+        rank = rank_map[rank] # KeyError if not found
+    except KeyError:
+        raise ValueError("Bad rank!")
 
-    # Dictionary seems like the simplest way to
-    # associate strings with int values (and look up
-    # those associations easily)
-    # fmt: off
-    rank_dict = {
-        "2": 2, "3": 3, "4": 4, "5": 5, "6": 6,
-        "7": 7, "8": 8, "9": 9, "10": 10, 
-        "J": 11, "Q": 12, "K": 13, "A": 14
-    }
-    # fmt: on
+    # rank_map.get(rank) # None if not found
 
-    # Remember: dictionary.get returns None if the key doesn't exist...
-    int_rank = rank_dict.get(str_rank)
+    suit_set = {"H", "D", "C", "S"}
+    if suit not in suit_set:
+        raise ValueError("Bad suit!")
 
-    return int_rank
+    return (rank, suit)
 
 
-def get_suit(card):
-    """
-    Return uppercase suit letter (or None if invalid)
-    """
-    str_suit = card[-1]
 
-    # Remember: {} can be used for a Set literal...
-    valid_suits = {"H", "S", "C", "D"}
 
-    if str_suit in valid_suits:
-        return str_suit
-    else:
-        return None
+
+
+
+
+
+
+
+
+
+"""
+Example of loose "duck" typing in Python:
+
+def foo(bar: Iterable):
+    for x in bar:
+        print(x)
+
+foo("hello")
+foo([1, 2, 3])
+"""
