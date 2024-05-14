@@ -1,16 +1,21 @@
-from dataclasses import dataclass, field
+"""
+manipulation of pytest's behavior
+"""
+
+from typing import Dict, Optional
+from dataclasses import dataclass
 import json
-from os import write
 from os.path import exists
 import pytest
-from _pytest.reports import TestReport
 from spoiler_alert_keep_out.level_documentation import (
     display_boss_email,
-    display_poker_rules,
+    display_my_rules,
+    GAME_NAME
 )
-from typing import Optional
 
-debug = False
+#pylint:disable=redefined-outer-name,invalid-name,line-too-long,inconsistent-return-statements,unspecified-encoding
+
+DEBUG = False
 
 MIN_LEVEL = "min_level"
 MAX_LEVEL = "max_level"
@@ -19,7 +24,7 @@ ALL_LEVEL_MARKS = (MIN_LEVEL, MAX_LEVEL)
 
 LEVEL_STATE_PATH = "spoiler_alert_keep_out/level_state.json"
 
-level_state: dict[str, str] = {}
+level_state: Dict[str, str] = {}
 
 
 @dataclass
@@ -40,6 +45,9 @@ class IntegrationStatus:
 
 
 def pytest_addoption(parser):
+    """
+    more options for pytest
+    """
     parser.addoption(
         "--level",
         action="store",
@@ -54,7 +62,7 @@ def pytest_addoption(parser):
     parser.addoption(
         "--rules",
         action="store_true",
-        help="list Poker Rules as of the current level",
+        help=f"list {GAME_NAME} Rules as of the current level",
     )
     parser.addoption(
         "--submit",
@@ -76,7 +84,7 @@ def pytest_configure(config):
     level_state = load_level_state()
     level_str = config.getoption("--level")
 
-    if debug:
+    if DEBUG:
         print(">>> pytest_configure level_state:", level_state)
         print(">>> pytest_configure --level:", level_str)
 
@@ -85,7 +93,6 @@ def pytest_configure(config):
             level = int(level_str)
         except (ValueError, TypeError):
             print("Ignoring invalid --level: {level_str}")
-            pass
     else:
         try:
             level = int(level_state["current_level"])
@@ -93,9 +100,8 @@ def pytest_configure(config):
             print(
                 f"Ignoring invalid current_level state: {level_state['current_level']}"
             )
-            pass
 
-    if debug:
+    if DEBUG:
         print(">>> pytest_configure level:", level)
 
     show_email = config.getoption("--email")
@@ -105,8 +111,8 @@ def pytest_configure(config):
 
     show_rules = config.getoption("--rules")
     if show_rules:
-        display_poker_rules(level)
-        pytest.exit(f"(after displaying v{(level or 0)+1} Poker rules)")
+        display_my_rules(level)
+        pytest.exit(f"(after displaying v{(level or 0)+1} {GAME_NAME} rules)")
 
 
 def get_integration_status(item):
@@ -121,7 +127,7 @@ def get_integration_status(item):
         return IntegrationStatus(is_integration=False)
 
     mark = integration_marks[0]
-    levels = dict()
+    levels = {}
     if mark.args:
         levels[MIN_LEVEL] = mark.args[0]
         levels[MAX_LEVEL] = mark.args[1] if len(mark.args > 1) else None
@@ -153,9 +159,9 @@ def pytest_runtest_setup(item):
         pytest.skip("(Not Running any Integration Tests)")
     if integration and submitted:
         if integration.min_level is not None and level < integration.min_level:
-            pytest.skip("Not Until Level {}".format(integration.min_level))
+            pytest.skip(f"Not Until Level {integration.min_level}")
         if integration.max_level is not None and level > integration.max_level:
-            pytest.skip("Not After Level {}".format(integration.max_level))
+            pytest.skip(f"Not After Level {integration.max_level}")
 
 
 def pytest_sessionfinish(session, exitstatus):
@@ -165,7 +171,7 @@ def pytest_sessionfinish(session, exitstatus):
     status_int = int(exitstatus)
     submitted = session.config.getoption("--submit")
     level_state = load_level_state()
-    if debug:
+    if DEBUG:
         print("\n")
         print(f"status_int: {status_int}")
         print(f"submit active: {submitted}")
@@ -190,9 +196,10 @@ def load_level_state():
     with open(LEVEL_STATE_PATH, "r") as f:
         try:
             level_state = json.loads(f.read())
-            if debug:
+            if DEBUG:
                 print(f"reading level_state: {level_state}")
             return level_state
+        #pylint:disable=broad-exception-caught
         except Exception as e:
             print("FAILED TO LOAD CONFIG!")
             print(e)
@@ -204,10 +211,11 @@ def write_level_state(level_state):
     """
     with open(LEVEL_STATE_PATH, "w") as f:
         try:
-            if debug:
+            if DEBUG:
                 print(f"writing level_state: {level_state}")
             f.write(json.dumps(level_state))
             f.flush()
+        #pylint:disable=broad-exception-caught
         except Exception as e:
             print("FAILED TO WRITE CONFIG!")
             print(e)
@@ -241,6 +249,7 @@ def pytest_runtest_makereport(item, call):
             return
 
         # Re-render the result repr as a single-line traceback string
+        #pylint:disable=protected-access
         one_liner = item._repr_failure_py(call.excinfo, style="no")
         one_liner_str = str(one_liner)
         # On AssertionError, or pytest.fail(), use the single-line traceback!

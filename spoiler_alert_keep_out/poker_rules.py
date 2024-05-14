@@ -1,3 +1,9 @@
+"""
+unstructured poker rules
+which levels they are relevant for
+and in which order they are displayed
+"""
+
 poker_rules = [
     {
         "level": 0,

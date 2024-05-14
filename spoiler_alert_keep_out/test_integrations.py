@@ -1,16 +1,19 @@
+"""
+Integration Tests
+"""
+
+#pylint:disable=unused-import
 from random import expovariate
 import inspect
 import pytest
 
-"""
-Integration Tests
-"""
 
 try:
     import poker_scoring_api
 except ImportError:
     poker_scoring_api = None
 
+#pylint:disable = invalid-name
 
 ###########################
 ### Basic Sanity Checks ###
@@ -46,6 +49,7 @@ def test_score_poker_hands_is_a_function():
     """
     poker_scoring_api.score_poker_hands is a function
     """
+    #pylint:disable=no-member
     assert inspect.isfunction(
         poker_scoring_api.score_poker_hands
     ), "poker_scoring_api.score_poker_hands must be a function!"
@@ -74,6 +78,9 @@ def test_poker_scoring_api_return_type():
 
 
 def hand_error_str(h1, h2, int_result):
+    """
+    human readable of what should have happened between hand 1 and 2
+    """
     if int_result == 1:
         result_verb = "win"
     elif int_result == 2:
@@ -85,6 +92,10 @@ def hand_error_str(h1, h2, int_result):
 
 
 def validate_hand_result(h1, h2, expected_result):
+    """
+    score_poker_hands on h1, h2 should give expected_result
+    """
+    #pylint:disable=unused-variable
     __tracebackhide__ = True
     result = score_poker_hands(h1, h2)
     if result != expected_result:
@@ -161,19 +172,20 @@ def test_10_single_card_hands(h1, h2, expected_result):
 
 @pytest.mark.integration(min_level=3)
 @pytest.mark.parametrize(
-    "h1, h2",
+    "_h1, _h2",
     [
         (None, None),
         ("2S", None),
         (None, "9D"),
     ],
 )
-def test_invalid_None_inputs(h1, h2):
+def test_invalid_None_inputs(_h1, _h2):
     """
     None inputs raise ValueErrors
     """
     NoneValueMessage = "Failed to raise ValueError, given None inputs!"
     # Less idiomatic than pytest.raises, but clearer assertion errors!
+    #pylint:disable=broad-exception-caught, raise-missing-from
     try:
         score_poker_hands(None, None)
     except Exception as e:
@@ -185,19 +197,20 @@ def test_invalid_None_inputs(h1, h2):
 
 @pytest.mark.integration(min_level=3)
 @pytest.mark.parametrize(
-    "h1, h2",
+    "_h1, _h2",
     [
         ("", ""),
         ("2C", ""),
         ("", "KD"),
     ],
 )
-def test_invalid_empty_inputs(h1, h2):
+def test_invalid_empty_inputs(_h1, _h2):
     """
     Empty string inputs raise ValueErrors
     """
     EmptyValueMessage = "Failed to raise ValueError, given empty string inputs!"
     # Less idiomatic than pytest.raises, but clearer assertion errors!
+    #pylint:disable=broad-exception-caught, raise-missing-from
     try:
         score_poker_hands(None, None)
     except Exception as e:
@@ -209,19 +222,20 @@ def test_invalid_empty_inputs(h1, h2):
 
 @pytest.mark.integration(min_level=3)
 @pytest.mark.parametrize(
-    "h1, h2",
+    "_h1, _h2",
     [
         (1, 2),
         ("4S", 2),
         (3.0, "2D"),
     ],
 )
-def test_invalid_numeric_inputs(h1, h2):
+def test_invalid_numeric_inputs(_h1, _h2):
     """
     Numeric inputs raise ValueErrors
     """
     NumericValueMessage = "Failed to raise ValueError, given numeric inputs!"
     # Less idiomatic than pytest.raises, but clearer assertion errors!
+    #pylint:disable=broad-exception-caught, raise-missing-from
     try:
         score_poker_hands(None, None)
     except Exception as e:
@@ -245,6 +259,7 @@ def test_invalid_suit_inputs(h1, h2):
     """
     # Less idiomatic than pytest.raises, but clearer assertion errors!
     assertion_error = f"Failed to raise ValueError, given invalid Suit {h2[-1]}"
+    #pylint:disable=broad-exception-caught, raise-missing-from
     try:
         score_poker_hands(h1, h2)
     except Exception as e:
@@ -269,6 +284,7 @@ def test_invalid_rank_inputs(h1, h2):
     """
     assertion_error = f"Failed to raise ValueError, given invalid Rank {h2[0:-1]}"
     # Less idiomatic than pytest.raises, but clearer assertion errors!
+    #pylint:disable=broad-exception-caught, raise-missing-from
     try:
         score_poker_hands(h1, h2)
     except Exception as e:
@@ -293,6 +309,7 @@ def test_invalid_cards(h1, h2):
     """
     assertion_error = f'Failed to raise ValueError, given invalid Cards: "{h1}", "{h2}"'
     # Less idiomatic than pytest.raises, but clearer assertion errors!
+    #pylint:disable=broad-exception-caught, raise-missing-from
     try:
         score_poker_hands(h1, h2)
     except Exception as e:
@@ -351,8 +368,9 @@ def test_invalid_obsolete_rank_inputs(h1, h2):
     """
     Rank "10" is no longer valid (in favor of rank "T")
     """
-    assertion_error = f'Failed to raise ValueError, given invalid Rank "10"'
+    assertion_error = 'Failed to raise ValueError, given invalid Rank "10"'
     # Less idiomatic than pytest.raises, but clearer assertion errors!
+    #pylint:disable=broad-exception-caught, raise-missing-from
     try:
         score_poker_hands(h1, h2)
     except Exception as e:
@@ -568,7 +586,7 @@ def test_straight_flush_hands(h1, h2, expected_result):
     """
     validate_hand_result(h1, h2, expected_result)
 
-
+#pylint:disable = pointless-string-statement
 """
 @pytest.mark.integration(min_level=16)
 @pytest.mark.parametrize("hands, expected_result", [
@@ -636,6 +654,7 @@ def test_duplicate_cards(h1, h2, duplication):
     """
     assertion_error = f"Failed to raise ValueError, given {duplication}!"
     # Less idiomatic than pytest.raises, but clearer assertion errors!
+    #pylint:disable=broad-exception-caught, raise-missing-from
     try:
         score_poker_hands(h1, h2)
     except Exception as e:

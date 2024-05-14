@@ -1,3 +1,7 @@
+"""
+raw boss' email bodies for each level 
+"""
+
 boss_emails = [
     # 0
     """
