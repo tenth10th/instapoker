@@ -7,6 +7,8 @@ def score_poker_hands(hand1_str: str, hand2_str: str) -> int:
         raise ValueError("Please check hand types or be fired")
     hand1 = Hand(hand1_str)
     hand2 = Hand(hand2_str)
+    if hand1.value() == hand2.value():
+        return 0
     return 1 if hand1.value() > hand2.value() else 2
 
 
@@ -45,6 +47,7 @@ class Card:
 class HandType(IntEnum):
     HIGHEST_CARD = 0
     PAIR = 1
+    TWO_PAIR = 2
 
 
 class Hand:
@@ -67,10 +70,26 @@ class Hand:
                 best_pair = rank
         return best_pair
 
-    def value(self) -> Tuple[int, int]:
-        pair_value = self.has_pair()
-        high_card = self.highest_card()
-        hand_type = HandType.PAIR if pair_value else HandType.HIGHEST_CARD
-        hand_value = pair_value or high_card
-        # Need to re-evaluate this as more Hands are added!
-        return hand_type, hand_value
+    def has_two_pair(self) -> Optional[int]:
+        rank_counts: dict[int, int] = dict()
+        for card in self.cards:
+            rank_counts[card.rank] = rank_counts.get(card.rank, 0) + 1
+
+        pairs = []
+        for rank, count in rank_counts.items():
+            if count == 2:
+                pairs.append(rank)
+        pairs = sorted(pairs, reverse=True)
+        return pairs if len(pairs) == 2 else None
+
+    def value(self) -> Tuple[int, int, Tuple[int]]:
+        comparisons = [
+            (HandType.TWO_PAIR, self.has_two_pair),
+            (HandType.PAIR, self.has_pair),
+        ]
+        sorted_cards = tuple(sorted([card.rank for card in self.cards], reverse=True))
+        for hand_type, check_func in comparisons:x
+            hand_value = check_func()
+            if hand_value:
+                return hand_type, hand_value, sorted_cards
+        return HandType.HIGHEST_CARD, sorted_cards[0], sorted_cards

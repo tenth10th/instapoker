@@ -27,14 +27,6 @@ def test_hand():
     assert h.highest_card() == 2
 
 
-@pytest.mark.parametrize("h1, h2, expected", [
-    ("TH", "2D", 1),
-    ("2D", "TH", 2),
-])
-def test_score_poker_hands(h1, h2, expected):
-    result = score_poker_hands(h1, h2)
-    assert result == expected
-
 
 @pytest.mark.parametrize("h1, h2, expected, except_message", [
     ("GH", "2D", ValueError, "That is not a valid rank"),
@@ -72,12 +64,24 @@ def test_hand_has_pair(hand_str, best_pair):
     assert h.has_pair() == best_pair
 
 
-
 @pytest.mark.parametrize("h1, h2, expected", [
+    # Simple
+    ("TH", "2D", 1),
+    ("2D", "TH", 2),
+
+    # Pairs
     ("2H 3D 2S", "4C 6S", 1),
     ("2H 8D", "4C 6S 4D", 2),
+    ("3C 3H AC QH 4S", "3D 3S AS QD 5C", 2),
+
+    # Two Pair
+    ("AH AD 2H 2D 8H", "AC AS QH JS 7D", 1),
+    ("2H 8D", "4C 6S 4D", 2),
+    
+    # Ties
+    ("3C 3H AC QH 4S", "3D 3S AS QD 4C", 0),
 ])
-def test_score_poker_hands_pairs(h1, h2, expected):
+def test_score_poker_hands(h1, h2, expected):
     result = score_poker_hands(h1, h2)
     assert result == expected
 
