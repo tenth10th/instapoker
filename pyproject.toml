@@ -1,0 +1,12 @@
+[project]
+name = "instapoker"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pytest~=9.0",
+]
+dev-dependencies = [
+    "black>=26.0",
+]
