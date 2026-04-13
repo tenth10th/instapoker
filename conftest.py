@@ -9,6 +9,7 @@ from spoiler_alert_keep_out.level_documentation import (
     display_poker_rules,
 )
 from typing import Optional
+from pathlib import Path
 
 debug = False
 
@@ -250,18 +251,18 @@ def pytest_runtest_makereport(item, call):
     return result
 
 
-def pytest_ignore_collect(path, config):
+def pytest_ignore_collect(collection_path, config):
     """
     Do not collect Integration ("spoiler alert" folder) Tests,
     unless we are in --submit mode.
 
     (Cuts down on clutter and/or confusion when running local / unit tests)
 
-    path: py._path.local.LocalPath
+    collection_path: pathlib.Path
     config: PyTest config object
     returns: Boolean (True for ignore, False for collect)
     """
-    if "spoiler_alert_keep_out" in path.strpath:
+    if Path("spoiler_alert_keep_out") in { collection_path }:
         if config.getoption("--submit"):
             return False
         return True
